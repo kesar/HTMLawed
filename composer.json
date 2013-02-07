@@ -1,0 +1,10 @@
+{
+    "name": "htmlLawed/htmlLawed",
+    "description": "htmlLawed - Process text with HTML markup to make it more compliant with HTML standards  and administrative policies",
+    "keywords": [ "html", "strip" ],
+    "homepage": "http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/",
+    "license": "GPL",
+    "require": {
+        "php": ">4.4.0"
+    }
+}
