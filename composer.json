@@ -1,6 +1,6 @@
 {
     "name": "htmlawed/htmlawed",
-    "description": "htmLawed - Process text with HTML markup to make it more compliant with HTML standards  and administrative policies",
+    "description": "htmLawed -  Process text with HTML markup to make it more compliant with HTML standards  and administrative policies",
     "keywords": [ "html", "strip" ],
     "homepage": "http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/",
     "license": "GPL",
