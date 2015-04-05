@@ -1,0 +1,8 @@
+*
+!.gitignore
+
+# html cache for sourceforge.net
+!cache
+
+# cache for downloaded zip-archives
+!zip
