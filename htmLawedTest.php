@@ -1,7 +1,7 @@
 <?php
 
 /*
-htmLawedTest.php, 17 May 2017
+htmLawedTest.php, 21 December 2020
 To test htmLawed
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
@@ -36,6 +36,21 @@ if(!isset($_SESSION['token'])){
 }
 
 // slashes
+if(!function_exists('get_magic_quotes_gpc')){
+  function get_magic_quotes_gpc(){
+    return false;
+  }
+}
+if(!function_exists('get_magic_quotes_runtime')){
+  function get_magic_quotes_runtime(){
+    return false;
+  }
+}
+if(!function_exists('set_magic_quotes_runtime')){
+  function set_magic_quotes_runtime($new_setting){
+    return true;
+  }
+}
 if(get_magic_quotes_gpc()){
  foreach($_POST as $k => $v){
   $_POST[$k] = stripslashes($v);
@@ -561,8 +576,8 @@ $cfg = array(
 foreach($cfg as $k=>$v){
  echo '<li>', $k, ': ';
  if(!empty($v[0])){ // input radio
-  $j = $v[3];
-  for($i = $j-1; ++$i < $v[0]+$v[3];++$j){
+  $j = intval($v[3]);
+  for($i = $j-1; ++$i < intval($v[0]) + intval($v[3]); ++$j){
    echo '<input type="radio" name="h', $k, '" value="', $i, '"', (!isset($_POST['h'. $k]) ? ($v[1] == $i ? ' checked="checked"' : '') : ($_POST['h'. $k] == $i ? ' checked="checked"' : '')), (isset($v['d']) ? ' disabled="disabled"' : ''), ' />', $i, ' ';
   }
   if($v[1] == 'nil'){
