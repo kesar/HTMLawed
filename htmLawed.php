@@ -1,7 +1,7 @@
 <?php
 
 /*
-htmLawed 1.2.4.1, 12 September 2017
+htmLawed 1.2.6, 4 September 2021
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility - www.bioinformatics.org/phplabware/internal_utilities/htmLawed
@@ -37,13 +37,13 @@ else{
 }
 $C['elements'] =& $e;
 // config attrs
-$x = !empty($C['deny_attribute']) ? strtolower(str_replace(array("\n", "\r", "\t", ' '), '', $C['deny_attribute'])) : '';
-$x = array_flip((isset($x[0]) && $x[0] == '*') ? str_replace('/', 'data-', explode('-', str_replace('data-', '/', $x))) : explode(',', $x. (!empty($C['safe']) ? ',on*' : '')));
+$x = !empty($C['deny_attribute']) ? strtolower(preg_replace('"\s+-"', '/', trim($C['deny_attribute']))) : '';
+$x = array_flip((isset($x[0]) && $x[0] == '*') ? explode('/', $x) : explode(',', $x. (!empty($C['safe']) ? ',on*' : '')));
 $C['deny_attribute'] = $x;
 // config URLs
 $x = (isset($C['schemes'][2]) && strpos($C['schemes'], ':')) ? strtolower($C['schemes']) : 'href: aim, feed, file, ftp, gopher, http, https, irc, mailto, news, nntp, sftp, ssh, tel, telnet'. (empty($C['safe']) ? ', app, javascript; *: data, javascript, ' : '; *:'). 'file, http, https';
 $C['schemes'] = array();
-foreach(explode(';', str_replace(array(' ', "\t", "\r", "\n"), '', $x)) as $v){
+foreach(explode(';', trim(str_replace(array(' ', "\t", "\r", "\n"), '', $x), ';')) as $v){
  $x = $x2 = null; list($x, $x2) = explode(':', $v, 2);
  if($x2){$C['schemes'][$x] = array_flip(explode(',', $x2));}
 }
@@ -519,10 +519,7 @@ foreach($aA as $k=>$v){
    $v = str_replace("­", ' ', (strpos($v, '&') !== false ? str_replace(array('&#xad;', '&#173;', '&shy;'), ' ', $v) : $v)); # double-quoted char: soft-hyphen; appears here as "­" or hyphen or something else depending on viewing software
    if($k == 'srcset'){
     $v2 = '';
-    $pattern = "/(?:[^\"'\s]+\s*(?:\d+[wx])+)/";
-    preg_match_all($pattern, $v, $matches);
-    $matches = call_user_func_array('array_merge', $matches);
-    foreach($matches as $k1=>$v1){
+    foreach(explode(',', $v) as $k1=>$v1){
      $v1 = explode(' ', ltrim($v1), 2);
      $k1 = isset($v1[1]) ? trim($v1[1]) : '';
      $v1 = trim($v1[0]);
@@ -655,11 +652,11 @@ if($e == 'font'){
  $a2 = '';
  while(preg_match('`(^|\s)(color|size)\s*=\s*(\'|")?(.+?)(\\3|\s|$)`i', $a, $m)){
   $a = str_replace($m[0], ' ', $a);
-  $a2 .= strtolower($m[2]) == 'color' ? (' color: '. str_replace('"', '\'', trim($m[4])). ';') : (isset($fs[($m = trim($m[4]))]) ? ($a2 .= ' font-size: '. str_replace('"', '\'', $fs[$m]). ';') : '');
+  $a2 .= strtolower($m[2]) == 'color' ? (' color: '. str_replace(array('"', ';', ':'), '\'', trim($m[4])). ';') : (isset($fs[($m = trim($m[4]))]) ? (' font-size: '. $fs[$m]. ';') : '');
  }
  while(preg_match('`(^|\s)face\s*=\s*(\'|")?([^=]+?)\\2`i', $a, $m) or preg_match('`(^|\s)face\s*=(\s*)(\S+)`i', $a, $m)){
   $a = str_replace($m[0], ' ', $a);
-  $a2 .= ' font-family: '. str_replace('"', '\'', trim($m[3])). ';';
+  $a2 .= ' font-family: '. str_replace(array('"', ';', ':'), '\'', trim($m[3])). ';';
  }
  $e = 'span'; return ltrim(str_replace('<', '', $a2));
 }
@@ -728,5 +725,5 @@ return str_replace(array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), array(
 
 function hl_version(){
 // version
-return '1.2.4.1';
+return '1.2.6';
 }

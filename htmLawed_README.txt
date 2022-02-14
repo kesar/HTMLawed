@@ -1,6 +1,6 @@
 /*
-htmLawed_README.txt, 12 September 2017
-htmLawed 1.2.4.1, 12 September 2017
+htmLawed_README.txt, 4 September 2021
+htmLawed 1.2.6, 4 September 2021
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed
@@ -903,7 +903,7 @@ A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/intern
   *  big - 'span style="font-size: larger;"'
   *  center - 'div style="text-align: center;"'
   *  dir - 'ul'
-  *  font (face, size, color) -	'span style="font-family: ; font-size: ; color: ;"' (size transformation reference:- http://style.cleverchimp.com/font_size_intervals/altintervals.html)
+  *  font (face, size, color) -	'span style="font-family: ; font-size: ; color: ;"' (size transformation reference:- http://web.archive.org/web/20180201141931/http://style.cleverchimp.com/font_size_intervals/altintervals.html)
   *  isindex - based on '$config["make_tag_strict"]', unchanged ('1') or removed ('2')
   *  s - 'span style="text-decoration: line-through;"'
   *  strike - 'span style="text-decoration: line-through;"'
@@ -920,7 +920,7 @@ A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/intern
   The output:
 
     <div style="text-align: center;">
-     The PHP <span style="text-decoration: line-through;">software</span> script used for this <span style="text-decoration: line-through;">web-page</span> web-page is <span style="font-weight: bold; font-family: arial; color: red; font-size: 200%;">htmLawedTest.php</span>, from <span style="color:green; text-decoration: underline;">PHP Labware</span>.
+     The PHP <span style="text-decoration: line-through;">software</span> script used for this <span style="text-decoration: line-through;">web-page</span> web-page is <span style="font-weight: bold; font-size: 200%; color: red; font-family: arial;">htmLawedTest.php</span>, from <u style="color:green">PHP Labware</u>.
     </div>
 
 
@@ -1027,7 +1027,7 @@ A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/intern
 
   Note that attributes specified in '$config["deny_attribute"]' are denied globally, for all elements. To deny attributes for only specific elements, '$spec' (see section:- #2.3) can be used. '$spec' can also be used to element-specifically permit an attribute otherwise denied through '$config["deny_attribute"]'.
   
-  Finer restrictions on attributes can also be put into effect through '$config["deny_attribute"]' (section:- 3.4.9).
+  Finer restrictions on attributes can also be put into effect through '$config["hook_tag"]' (section:- #3.4.9).
 
   *Note*: To deny all but a few attributes globally, a simpler way to specify '$config["deny_attribute"]' would be to use the notation '* -attribute1 -attribute2 ...'. Thus, a value of '* -title -href' implies that except 'href' and 'title' (where allowed as per standards) all other attributes are to be removed. With this notation, the value for the parameter 'safe' (section:- #3.6) will have no effect on 'deny_attribute'. Values of 'aria*' 'data*', and 'on*' cannot be used in this notation to refer to the sets of all ARIA, data-*, and on* attributes respectively.
 
@@ -1259,7 +1259,7 @@ A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/intern
 
       // Inject param for allowscriptaccess
       if($element == 'object'){
-        $new_element = '<param id='my_'. $id; allowscriptaccess="never" />';
+        $new_element = '<param id="my_'. $id. '"; allowscriptaccess="never" />';
         ++$id;
       }
 
@@ -1369,6 +1369,12 @@ A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/intern
   (The release date for the downloadable package of files containing documentation, demo script, test-cases, etc., besides the 'htmLawed.php' file, may be updated without a change-log entry if the secondary files, but not htmLawed per se, are revised.)
 
   `Version number - Release date. Notes`
+
+  1.2.6 - 4 September 2021. Fixes a bug that arises when '$config["deny_attribute"]' has a 'data-*' attribute with > 1 hyphen character 
+
+  1.2.5 - 24 September 2019. Fixes two bugs in 'font' tag transformation
+
+  1.2.4.2 - 16 May 2019. Corrects a PHP notice if a semi-colon is present in '$config["schemes"]' 
 
   1.2.4.1 - 12 September 2017. Corrects a function re-declaration bug introduced in version 1.2.4
     
