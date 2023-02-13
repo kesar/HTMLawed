@@ -1,0 +1,48 @@
+# yamllint disable rule:line-length
+# yamllint disable rule:braces
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - '*.*'
+
+jobs:
+  tests:
+    name: Test with PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version:
+          - '7.0'
+          - '7.1'
+          - '7.2'
+          - '7.3'
+          - '7.4'
+          - '8.0'
+          - '8.1'
+          - '8.2'
+          - 'latest'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate htmLawed.php
+        run: |
+          php -l htmLawed.php
+
+      - name: Validate composer.json
+        run: |
+          composer validate
