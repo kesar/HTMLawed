@@ -37,7 +37,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
-          tools: composer:v2
+          tools: composer:v2, phpunit
 
       - name: Validate htmLawed.php
         run: |
@@ -46,3 +46,7 @@ jobs:
       - name: Validate composer.json
         run: |
           composer validate
+
+      - name: Run tests
+        run: |
+          phpunit

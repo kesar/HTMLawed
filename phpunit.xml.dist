@@ -1,0 +1,12 @@
+<phpunit bootstrap="vendor/autoload.php"
+         executionOrder="random"
+         resolveDependencies="true"
+         colors="true">
+
+    <testsuites>
+        <testsuite name="Default">
+            <directory suffix=".phpt">tests/</directory>
+        </testsuite>
+    </testsuites>
+
+</phpunit>
