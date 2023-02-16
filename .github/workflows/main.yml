@@ -62,4 +62,4 @@ jobs:
 
       - name: Run tests
         run: |
-          phpunit
+          vendor/bin/phpunit
