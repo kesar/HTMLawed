@@ -1,5 +1,5 @@
 /*
-htmLawed_TESTCASE.txt, 24 September 2019
+htmLawed_TESTCASE.txt, 10 April 2022
 To test htmLawed
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
@@ -138,6 +138,16 @@ Disallowed tag p
 <strong>Content invalid?:</strong> <form></form><br /> (try setting 'form' as parent)<br />
 <strong>Casing:</strong> <A href=""></a><br />
 <strong>Check for tidy:</strong> <br /><hr /></div><hr /></div><hr /></div><div>hi</div>
+<strong>Customized element: </strong><button is="plastic-button">Click Me!</button>
+<strong>Custom element:</strong> <plastic-button>Click me?</plastic-button><img-viewer filter="Kelvin"><img src="images/tree.jpg" alt="A beautiful tree towering over an empty savannah"></img-viewer>
+<strong>Custom element:</strong> <share-buttons>
+  <social-button type="fb"><a href="...">Facebook</a></social-button>
+  <social-button type="plus" myattr="social"><a href="...">G+</a></social-button>
+  <emotion-😍>xx<emotion-😍>
+  </share-buttons>
+
+<strong>Math:</strong> <math xmlns = "http://www.w3.org/1998/Math/MathML"><mrow>2<mo> = </mo>2</mrow></math>
+<strong>SVG:</strong> <svg viewBox="0 0 10 10" x="200" width="100"><circle cx="5" cy="5" r="4" /></svg>
 
 <h6>Entities</h6>
 

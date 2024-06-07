@@ -1,7 +1,7 @@
 <?php
 
 /*
-htmLawedTest.php, 21 December 2020
+htmLawedTest.php, 10 April 2022
 To test htmLawed
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
@@ -546,6 +546,7 @@ $cfg = array(
 'and_mark'=>array('2', '0', 'mark original <em>&amp;</em> chars', '0', 'd'=>1), // 'd' to disable
 'anti_link_spam'=>array('1', '0', 'modify <em>href</em> values as an anti-link spam measure', '0', array(array('30', '1', '', 'regex for extra <em>rel</em>'), array('30', '2', '', 'regex for no <em>href</em>'))),
 'anti_mail_spam'=>array('1', '0', 'replace <em>@</em> in <em>mailto:</em> URLs', '0', '8', 'NO@SPAM', 'replacement'),
+'any_custom_element'=>array('2', '1', 'allow custom element', '0'),
 'balance'=>array('2', '1', 'fix nestings and balance tags', '0'),
 'base_url'=>array('', '', 'base URL', '25'),
 'cdata'=>array('4', 'nil', 'allow <em>CDATA</em> sections', 'nil'),
