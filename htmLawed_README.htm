@@ -75,7 +75,7 @@ span.totop a, span.totop a:visited {color: #6699cc;}
 &#160; &#160; <span class="toc-item"><a href="#s3.3.3"><span class="item-no">3.3.3</span>&#160; Tag balancing &amp; proper nesting</a></span><br />
 &#160; &#160; <span class="toc-item"><a href="#s3.3.4"><span class="item-no">3.3.4</span>&#160; Elements requiring child elements</a></span><br />
 &#160; &#160; <span class="toc-item"><a href="#s3.3.5"><span class="item-no">3.3.5</span>&#160; Beautify or compact HTML</a></span><br />
-&#160; &#160; <span class="toc-item"><a href="#s3.3.6"><span class="item-no">3.3.6</span>&#160;Custom elements</a></span><br />
+&#160; &#160; <span class="toc-item"><a href="#s3.3.6"><span class="item-no">3.3.6</span>&#160; Custom elements</a></span><br />
 &#160; <span class="toc-item"><a href="#s3.4"><span class="item-no">3.4</span>&#160; Attributes</a></span><br />
 &#160; &#160; <span class="toc-item"><a href="#s3.4.1"><span class="item-no">3.4.1</span>&#160; Auto-addition of XHTML-required attributes</a></span><br />
 &#160; &#160; <span class="toc-item"><a href="#s3.4.2"><span class="item-no">3.4.2</span>&#160; Duplicate/invalid <span class="term">id</span>&#160;values</a></span><br />
@@ -112,11 +112,11 @@ span.totop a, span.totop a:visited {color: #6699cc;}
 
 <div id="body">
 <br />
-<div class="comment">htmLawed_README.txt, 10 April 2022<br />
-htmLawed 1.2.7, 10 April 2022<br />
+<div class="comment">htmLawed_README.txt, 6 June 2022<br />
+htmLawed 1.2.8<br />
 Copyright Santosh Patnaik<br />
 Dual licensed with LGPL 3 and GPL 2+<br />
-A PHP Labware internal utility &#45; <a href="http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed">http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed</a>&#160;</div>
+A PHP Labware internal utility &#45; <a href="https://bioinformatics.org/phplabware/internal_utilities/htmLawed">https://bioinformatics.org/phplabware/internal_utilities/htmLawed</a>&#160;</div>
 <br />
 
 <div class="section"><h2>
@@ -1308,6 +1308,8 @@ A PHP Labware internal utility &#45; <a href="http://www.bioinformatics.org/phpl
 <br />
 &#160; To <em>beautify</em>, <span class="term">$config["tidy"]</span>&#160;is set as <span class="term">1</span>, or for customized tidying, as a string like <span class="term">2s2n</span>. The <span class="term">s</span>&#160;or <span class="term">t</span>&#160;character specifies the use of spaces or tabs for indentation. The first and third characters, any of the digits 0-9, specify the number of spaces or tabs per indentation, and any parental lead spacing (extra indenting of the whole block of input text). The <span class="term">r</span>&#160;and <span class="term">n</span>&#160;characters are used to specify line-break characters: <span class="term">n</span>&#160;for <span class="term">\n</span>&#160;(Unix/Mac OS X line-breaks), <span class="term">rn</span>&#160;or <span class="term">nr</span>&#160;for <span class="term">\r\n</span>&#160;(Windows/DOS line-breaks), or <span class="term">r</span>&#160;for <span class="term">\r</span>.<br />
 <br />
+&#160; For instance, with <span class="term">$config["tidy"]</span>&#160;set as <span class="term">3s2n</span>, 3 space characters are used per indentation level, the entire block of text (HTML code) gets a lead (left spacing) of 2 space characters, and line-breaks are with <span class="term">\n</span>&#160;character.<br />
+<br />
 &#160; The <span class="term">$config["tidy"]</span>&#160;value of <span class="term">1</span>&#160;is equivalent to <span class="term">2s0n</span>. Other <span class="term">$config["tidy"]</span>&#160;values are read loosely: a value of <span class="term">4</span>&#160;is equivalent to <span class="term">4s0n</span>; <span class="term">t2</span>, to <span class="term">1t2n</span>; <span class="term">s</span>, to <span class="term">2s0n</span>; <span class="term">2TR</span>, to <span class="term">2t0r</span>; <span class="term">T1</span>, to <span class="term">1t1n</span>; <span class="term">nr3</span>, to <span class="term">3s0nr</span>, and so on. Except in the indentations and line-spacings, runs of white-spaces are replaced with a single space during beautification.<br />
 <br />
 &#160; Input formatting using <span class="term">$config["tidy"]</span>&#160;is not recommended when input text has mixed markup (like HTML + PHP).<br />
@@ -1804,7 +1806,7 @@ A PHP Labware internal utility &#45; <a href="http://www.bioinformatics.org/phpl
 <a name="s3.8" id="s3.8"></a><span class="item-no">3.8</span>&#160; Obtaining <em>finalized</em>&#160;parameter values
 </h3><span class="totop"><a href="#peak">(to top)</a></span><br style="clear: both;" />
 <br />
-&#160; htmLawed can assign the <em>finalized</em>&#160;<span class="term">$config</span>&#160;and <span class="term">$spec</span>&#160;values to a variable named by <span class="term">$config["show_setting"]</span>. The variable, made global by htmLawed, is set as an array with three keys: <span class="term">config</span>, with the <span class="term">$config</span>&#160;value, <span class="term">spec</span>, with the <span class="term">$spec</span>&#160;value, and <span class="term">time</span>, with a value that is the Unix time (the output of PHP's <span class="term">microtime()</span>&#160;function) when the value was assigned. Admins should use a PHP-compliant variable name (e.g., one that does not begin with a numerical digit) that does not conflict with variable names in their non-htmLawed code.<br />
+&#160; htmLawed can assign the <em>finalized</em>&#160;<span class="term">$config</span>&#160;and <span class="term">$spec</span>&#160;values to a variable named by <span class="term">$config["show_setting"]</span>. The variable, made global by htmLawed, is set as an array with four keys: <span class="term">config</span>, with the <span class="term">$config</span>&#160;value, <span class="term">spec</span>, with the <span class="term">$spec</span>&#160;value, <span class="term">time</span>, with a value that is the Unix time (the output of PHP's <span class="term">microtime</span>&#160;function) when htmLawed completed filtering, and <span class="term">version</span>, with htmLawed version. Admins should use a PHP-compliant variable name (e.g., one that does not begin with a numerical digit) that does not conflict with variable names in their non-htmLawed code.<br />
 <br />
 &#160; The values, which are also post-hook function (if any), can be used to auto-generate information (on, e.g., the elements that are permitted) for input writers.<br />
 
@@ -1859,6 +1861,8 @@ A PHP Labware internal utility &#45; <a href="http://www.bioinformatics.org/phpl
 &#160; (The release date for the downloadable package of files containing documentation, demo script, test-cases, etc., besides the <span class="term">htmLawed.php</span>&#160;file, may be updated without a change-log entry if the secondary files, but not htmLawed per se, are revised.)<br />
 <br />
 &#160; <em>Version number - Release date. Notes</em><br />
+<br />
+&#160; 1.2.8 - 6 June 2022. Fixes incorrect formatting of HTML comments when <span class="term">$config["comment"]</span>&#160;= 4; fixes misreading of entity-fied colon characters in <span class="term">style</span>&#160;attribute values; <span class="term">$config["show_setting"]</span>&#160;now includes htmLawed version; improved PHP 8.2 code compatibility, and readability.<br />
 <br />
 &#160; 1.2.7 - 10 April 2022. Support for elements <span class="term">dialog</span>, <span class="term">picture</span>, <span class="term">slot</span>, and <span class="term">template</span>; support for custom HTML elements; support for global attributes <span class="term">autocapitalize</span>, <span class="term">autofocus</span>, <span class="term">enterkeyhint</span>, <span class="term">inputmode</span>, <span class="term">is</span>, and <span class="term">nonce</span>; support for 17 additional ARIA and 11 additional on* event handler attributes; support for attributes with names not beginning with a-z; fix for a minor bug arising during deprecated height/weight attribute transformation<br />
 <br />
@@ -2319,7 +2323,7 @@ A PHP Labware internal utility &#45; <a href="http://www.bioinformatics.org/phpl
 </div>
 </div>
 <br />
-<hr /><br /><br /><span class="subtle"><small>HTM version of <em><a href="htmLawed_README.txt">htmLawed_README.txt</a></em> generated on 11 Apr, 2022 using <a href="http://www.bioinformatics.org/phplabware/internal_utilities">rTxt2htm</a> from PHP Labware</small></span>
+<hr /><br /><br /><span class="subtle"><small>HTM version of <em><a href="htmLawed_README.txt">htmLawed_README.txt</a></em> generated on 07 Jun, 2022 using <a href="http://www.bioinformatics.org/phplabware/internal_utilities">rTxt2htm</a> from PHP Labware</small></span>
 </div><!-- ended div body -->
 </div><!-- ended div top -->
 </body>

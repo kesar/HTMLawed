@@ -1,9 +1,9 @@
 /*
-htmLawed_README.txt, 10 April 2022
-htmLawed 1.2.7, 10 April 2022
+htmLawed_README.txt, 6 June 2022
+htmLawed 1.2.8
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
-A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed
+A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_utilities/htmLawed
 */
 
 
@@ -1023,6 +1023,8 @@ A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/intern
 
   To `beautify`, '$config["tidy"]' is set as '1', or for customized tidying, as a string like '2s2n'. The 's' or 't' character specifies the use of spaces or tabs for indentation. The first and third characters, any of the digits 0-9, specify the number of spaces or tabs per indentation, and any parental lead spacing (extra indenting of the whole block of input text). The 'r' and 'n' characters are used to specify line-break characters: 'n' for '\n' (Unix/Mac OS X line-breaks), 'rn' or 'nr' for '\r\n' (Windows/DOS line-breaks), or 'r' for '\r'.
 
+  For instance, with '$config["tidy"]' set as '3s2n', 3 space characters are used per indentation level, the entire block of text (HTML code) gets a lead (left spacing) of 2 space characters, and line-breaks are with '\n' character.
+
   The '$config["tidy"]' value of '1' is equivalent to '2s0n'. Other '$config["tidy"]' values are read loosely: a value of '4' is equivalent to '4s0n'; 't2', to '1t2n'; 's', to '2s0n'; '2TR', to '2t0r'; 'T1', to '1t1n'; 'nr3', to '3s0nr', and so on. Except in the indentations and line-spacings, runs of white-spaces are replaced with a single space during beautification.
 
   Input formatting using '$config["tidy"]' is not recommended when input text has mixed markup (like HTML + PHP).
@@ -1355,7 +1357,7 @@ A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/intern
 -- 3.8  Obtaining `finalized` parameter values ---------------------o
 
 
-  htmLawed can assign the `finalized` '$config' and '$spec' values to a variable named by '$config["show_setting"]'. The variable, made global by htmLawed, is set as an array with three keys: 'config', with the '$config' value, 'spec', with the '$spec' value, and 'time', with a value that is the Unix time (the output of PHP's 'microtime()' function) when the value was assigned. Admins should use a PHP-compliant variable name (e.g., one that does not begin with a numerical digit) that does not conflict with variable names in their non-htmLawed code.
+  htmLawed can assign the `finalized` '$config' and '$spec' values to a variable named by '$config["show_setting"]'. The variable, made global by htmLawed, is set as an array with four keys: 'config', with the '$config' value, 'spec', with the '$spec' value, 'time', with a value that is the Unix time (the output of PHP's 'microtime' function) when htmLawed completed filtering, and 'version', with htmLawed version. Admins should use a PHP-compliant variable name (e.g., one that does not begin with a numerical digit) that does not conflict with variable names in their non-htmLawed code.
 
   The values, which are also post-hook function (if any), can be used to auto-generate information (on, e.g., the elements that are permitted) for input writers.
 
@@ -1399,6 +1401,8 @@ A PHP Labware internal utility - http://www.bioinformatics.org/phplabware/intern
   (The release date for the downloadable package of files containing documentation, demo script, test-cases, etc., besides the 'htmLawed.php' file, may be updated without a change-log entry if the secondary files, but not htmLawed per se, are revised.)
 
   `Version number - Release date. Notes`
+
+  1.2.8 - 6 June 2022. Fixes incorrect formatting of HTML comments when '$config["comment"]' = 4; fixes misreading of entity-fied colon characters in 'style' attribute values; '$config["show_setting"]' now includes htmLawed version; improved PHP 8.2 code compatibility, and readability.
 
   1.2.7 - 10 April 2022. Support for elements 'dialog', 'picture', 'slot', and 'template'; support for custom HTML elements; support for global attributes 'autocapitalize', 'autofocus', 'enterkeyhint', 'inputmode', 'is', and 'nonce'; support for 17 additional ARIA and 11 additional on* event handler attributes; support for attributes with names not beginning with a-z; fix for a minor bug arising during deprecated height/weight attribute transformation 
 
