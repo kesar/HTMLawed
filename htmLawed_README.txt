@@ -1,6 +1,6 @@
 /*
-htmLawed_README.txt, 23 January 2023
-htmLawed 1.2.11
+htmLawed_README.txt, 25 April 2023
+htmLawed 1.2.12
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_utilities/htmLawed
@@ -1137,7 +1137,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
   
   '!' can be put in the list of schemes to disallow all protocols as well as `local` URLs. Thus, with 'href: http, style: !', '<a href="http://cnn.com" style="background-image: url(local.jpg);">CNN</a>' will become '<a href="http://cnn.com" style="background-image: url(denied:local.jpg);">CNN</a>'
 
-  With '$config["safe"] = 1', all URLs are disallowed in the 'style' attribute values.
+  With '$config["safe"] = 1' (section:- #3.6), all URLs are disallowed in the 'style' attribute values, unless a rule for 'style' is explicitly specified in '$config["schemes"]' or '$config["style_pass"]' (section:- #3.4.8) is set to '1'.
 
 
 .. 3.4.4  Absolute & relative URLs in attribute values ............o
@@ -1260,6 +1260,8 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   As such, it is better to set up a CSS file with class declarations, disallow the 'style' attribute, set a '$spec' rule (see section:- #2.3) for 'class' for the 'oneof' or 'match' parameter, and ask writers to make use of the 'class' attribute.
 
+  With '$config["safe"] = 1' (section:- #3.6) , all URLs are disallowed in the 'style' attribute values, unless a rule for 'style' is explicitly specified in '$config["schemes"]' (section:- #3.4.3) or '$config["style_pass"]' is set to '1'.
+
 
 .. 3.4.9  Hook function for tag content ............................o
 
@@ -1337,7 +1339,9 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
     $processed = htmLawed($text, array('safe'=>1, 'deny_attribute'=>'style'));
 
-  Permitting the 'style' attribute brings in risks of `click-jacking`, etc. CSS property values can render a page non-functional or be used to deface it. Except for URLs, dynamic expressions, and some other things, htmLawed does not completely check 'style' values. It does provide ways for the code-developer implementing htmLawed to do such checks through the '$spec' argument, and through the 'hook_tag' parameter (see section:- #3.4.8 for more). Disallowing style completely and relying on CSS classes and stylesheet files is recommended. 
+  With '$config["safe"] = 1', all URLs are disallowed in the 'style' attribute values, unless a rule for 'style' is explicitly specified in '$config["schemes"]' (section:- #3.4.3) or '$config["style_pass"]' (section:- #3.4.8) is set to '1'.
+
+  Permitting the 'style' attribute brings in risks of `click-jacking`, etc. CSS property values can render a page non-functional or be used to deface it. Except for URLs, dynamic expressions, and some other things, htmLawed does not completely check 'style' values. It does provide ways for the code-developer implementing htmLawed to do such checks through the '$spec' argument, and through the 'hook_tag' parameter (see section:- #3.4.8 for more). Disallowing style completely and relying on CSS classes and stylesheet files is recommended.
   
   If a value for a parameter auto-set through 'safe' is still manually provided, then that value can over-ride the auto-set value. E.g., with '$config["safe"] = 1' and '$config["elements"] = "* +script"', 'script', but not 'applet', is allowed. Such over-ride does not occur for 'deny_attribute' (for legacy reason) when comma-separated attribute names are provided as the value for this parameter (section:- #3.4); instead htmLawed will add 'on*' to the value provided for 'deny_attribute'.
 
@@ -1403,6 +1407,8 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
   (The release date for the downloadable package of files containing documentation, demo script, test-cases, etc., besides the 'htmLawed.php' file, may be updated without a change-log entry if the secondary files, but not htmLawed per se, are revised.)
 
   `Version number - Release date. Notes`
+
+  1.2.12 - 25 April 2023. Fixed issue that prevented use of attribute 'sizes' in 'img' and 'source'
 
   1.2.11 - 23 January 2023. Fixes an XSS vulnerability arising from a lack of inspection for the alphabetical HTML entity for colon character in URLs
 
@@ -1718,7 +1724,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
   selected - option
   shape - area, a
   size - font, hr^, input, select
-  sizes - link
+  sizes - img, link, source
   span - col, colgroup
   src - audio, embed, iframe, img, input, script, source, track, video
   srcdoc~ - iframe

@@ -112,8 +112,8 @@ span.totop a, span.totop a:visited {color: #6699cc;}
 
 <div id="body">
 <br />
-<div class="comment">htmLawed_README.txt, 23 January 2023<br />
-htmLawed 1.2.11<br />
+<div class="comment">htmLawed_README.txt, 25 April 2023<br />
+htmLawed 1.2.12<br />
 Copyright Santosh Patnaik<br />
 Dual licensed with LGPL 3 and GPL 2+<br />
 A PHP Labware internal utility &#45; <a href="https://bioinformatics.org/phplabware/internal_utilities/htmLawed">https://bioinformatics.org/phplabware/internal_utilities/htmLawed</a>&#160;</div>
@@ -1438,7 +1438,7 @@ A PHP Labware internal utility &#45; <a href="https://bioinformatics.org/phplabw
 <br />
 &#160; <span class="term">!</span>&#160;can be put in the list of schemes to disallow all protocols as well as <em>local</em>&#160;URLs. Thus, with <span class="term">href&#58; http, style&#58; !</span>, <span class="term">&lt;a href="http&#58;//cnn.com" style="background-image&#58; url(local.jpg);"&gt;CNN&lt;/a&gt;</span>&#160;will become <span class="term">&lt;a href="http&#58;//cnn.com" style="background-image&#58; url(denied&#58;local.jpg);"&gt;CNN&lt;/a&gt;</span><br />
 <br />
-&#160; With <span class="term">$config["safe"] = 1</span>, all URLs are disallowed in the <span class="term">style</span>&#160;attribute values.<br />
+&#160; With <span class="term">$config["safe"] = 1</span>&#160;(<a href="#s3.6">section 3.6</a>), all URLs are disallowed in the <span class="term">style</span>&#160;attribute values, unless a rule for <span class="term">style</span>&#160;is explicitly specified in <span class="term">$config["schemes"]</span>&#160;or <span class="term">$config["style_pass"]</span>&#160;(<a href="#s3.4.8">section 3.4.8</a>) is set to <span class="term">1</span>.<br />
 
 </div>
 <div class="sub-sub-section"><h4>
@@ -1641,6 +1641,8 @@ A PHP Labware internal utility &#45; <a href="https://bioinformatics.org/phplabw
 &#160; It is also possible to have htmLawed let through any <span class="term">style</span>&#160;value by setting <span class="term">$config["style_pass"]</span>&#160;to <span class="term">1</span>.<br />
 <br />
 &#160; As such, it is better to set up a CSS file with class declarations, disallow the <span class="term">style</span>&#160;attribute, set a <span class="term">$spec</span>&#160;rule (see <a href="#s2.3">section 2.3</a>) for <span class="term">class</span>&#160;for the <span class="term">oneof</span>&#160;or <span class="term">match</span>&#160;parameter, and ask writers to make use of the <span class="term">class</span>&#160;attribute.<br />
+<br />
+&#160; With <span class="term">$config["safe"] = 1</span>&#160;(<a href="#s3.6">section 3.6</a>) , all URLs are disallowed in the <span class="term">style</span>&#160;attribute values, unless a rule for <span class="term">style</span>&#160;is explicitly specified in <span class="term">$config["schemes"]</span>&#160;(<a href="#s3.4.3">section 3.4.3</a>) or <span class="term">$config["style_pass"]</span>&#160;is set to <span class="term">1</span>.<br />
 
 </div>
 <div class="sub-sub-section"><h4>
@@ -1786,6 +1788,8 @@ A PHP Labware internal utility &#45; <a href="https://bioinformatics.org/phplabw
 <code class="code">&#160; &#160; $processed = htmLawed($text, array(&#39;safe&#39;=&gt;1, &#39;deny_attribute&#39;=&gt;&#39;style&#39;));</code>
 <br />
 <br />
+&#160; With <span class="term">$config["safe"] = 1</span>, all URLs are disallowed in the <span class="term">style</span>&#160;attribute values, unless a rule for <span class="term">style</span>&#160;is explicitly specified in <span class="term">$config["schemes"]</span>&#160;(<a href="#s3.4.3">section 3.4.3</a>) or <span class="term">$config["style_pass"]</span>&#160;(<a href="#s3.4.8">section 3.4.8</a>) is set to <span class="term">1</span>.<br />
+<br />
 &#160; Permitting the <span class="term">style</span>&#160;attribute brings in risks of <em>click-jacking</em>, etc. CSS property values can render a page non-functional or be used to deface it. Except for URLs, dynamic expressions, and some other things, htmLawed does not completely check <span class="term">style</span>&#160;values. It does provide ways for the code-developer implementing htmLawed to do such checks through the <span class="term">$spec</span>&#160;argument, and through the <span class="term">hook_tag</span>&#160;parameter (see <a href="#s3.4.8">section 3.4.8</a>&#160;for more). Disallowing style completely and relying on CSS classes and stylesheet files is recommended.<br />
 <br />
 &#160; If a value for a parameter auto-set through <span class="term">safe</span>&#160;is still manually provided, then that value can over-ride the auto-set value. E.g., with <span class="term">$config["safe"] = 1</span>&#160;and <span class="term">$config["elements"] = "&#42; +script"</span>, <span class="term">script</span>, but not <span class="term">applet</span>, is allowed. Such over-ride does not occur for <span class="term">deny_attribute</span>&#160;(for legacy reason) when comma-separated attribute names are provided as the value for this parameter (<a href="#s3.4">section 3.4</a>); instead htmLawed will add <span class="term">on&#42;</span>&#160;to the value provided for <span class="term">deny_attribute</span>.<br />
@@ -1865,6 +1869,8 @@ A PHP Labware internal utility &#45; <a href="https://bioinformatics.org/phplabw
 &#160; (The release date for the downloadable package of files containing documentation, demo script, test-cases, etc., besides the <span class="term">htmLawed.php</span>&#160;file, may be updated without a change-log entry if the secondary files, but not htmLawed per se, are revised.)<br />
 <br />
 &#160; <em>Version number - Release date. Notes</em><br />
+<br />
+&#160; 1.2.12 - 25 April 2023. Fixed issue that prevented use of attribute <span class="term">sizes</span>&#160;in <span class="term">img</span>&#160;and <span class="term">source</span><br />
 <br />
 &#160; 1.2.11 - 23 January 2023. Fixes an XSS vulnerability arising from a lack of inspection for the alphabetical HTML entity for colon character in URLs<br />
 <br />
@@ -2190,7 +2196,7 @@ A PHP Labware internal utility &#45; <a href="https://bioinformatics.org/phplabw
 &#160; selected - option<br />
 &#160; shape - area, a<br />
 &#160; size - font, hr^, input, select<br />
-&#160; sizes - link<br />
+&#160; sizes - img, link, source<br />
 &#160; span - col, colgroup<br />
 &#160; src - audio, embed, iframe, img, input, script, source, track, video<br />
 &#160; srcdoc~ - iframe<br />
@@ -2335,7 +2341,7 @@ A PHP Labware internal utility &#45; <a href="https://bioinformatics.org/phplabw
 </div>
 </div>
 <br />
-<hr /><br /><br /><span class="subtle"><small>HTM version of <em><a href="htmLawed_README.txt">htmLawed_README.txt</a></em> generated on 23 Jan, 2023 using <a href="http://www.bioinformatics.org/phplabware/internal_utilities">rTxt2htm</a> from PHP Labware</small></span>
+<hr /><br /><br /><span class="subtle"><small>HTM version of <em><a href="htmLawed_README.txt">htmLawed_README.txt</a></em> generated on 25 Apr, 2023 using <a href="http://www.bioinformatics.org/phplabware/internal_utilities">rTxt2htm</a> from PHP Labware</small></span>
 </div><!-- ended div body -->
 </div><!-- ended div top -->
 </body>
