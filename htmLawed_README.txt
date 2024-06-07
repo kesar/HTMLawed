@@ -1,6 +1,6 @@
 /*
-htmLawed_README.txt, 6 June 2022
-htmLawed 1.2.8
+htmLawed_README.txt, 2 July 2022
+htmLawed 1.2.9
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_utilities/htmLawed
@@ -207,7 +207,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 -- 1.6  Availability -----------------------------------------------o
 
 
-  htmLawed can be downloaded for free at its website:- http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed. Besides the 'htmLawed.php' file, the download has the htmLawed documentation (this document) in plain text:- htmLawed_README.txt and HTML:- htmLawed_README.htm formats, a script for testing:- htmLawedTest.php, and a text file for test-cases:- htmLawed_TESTCASE.txt. htmLawed is also available as a PHP class (OOP code) at its website.
+  htmLawed can be downloaded for free at its website:- https://bioinformatics.org/phplabware/internal_utilities/htmLawed. Besides the 'htmLawed.php' file, the download has the htmLawed documentation (this document) in plain text:- htmLawed_README.txt and HTML:- htmLawed_README.htm formats, a script for testing:- htmLawedTest.php, and a text file for test-cases:- htmLawed_TESTCASE.txt. htmLawed can be installed with Composer, and is also available as a PHP class (OOP code) – see the website:- https://bioinformatics.org/phplabware/internal_utilities/htmLawed. Official htmLawed releases are also put up on Sourceforge:- https://sourceforge.net/projects/htmlawed/.
 
 
 == 2  Usage =======================================================oo
@@ -462,7 +462,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   A rule begins with an HTML *element* name(s) (`rule-element`), for which the rule applies, followed by an equal-to (=) sign. A rule-element may represent multiple elements if comma (,)-separated element names are used. E.g., 'th,td,tr='.
 
-  Rest of the rule consists of comma-separated HTML *attribute names*. A minus (-) character before an attribute means that the attribute is not permitted inside the rule-element. E.g., '-width'. To deny all attributes, '-*' can be used.
+  Rest of the rule consists of comma-separated HTML *attribute names*, which can be the wildcard references '*', 'aria*', 'data*', and 'on*' for the sets of all standard, Aria, data-*, and event (on*) attributes, respectively. A minus (-) character before an attribute means that the attribute is not permitted inside the rule-element. E.g., '-width'. To deny all attributes, '-*' can be used. All Aria, data-*, and event (on*) attributes can similarly be denined using 'aria*', 'data*', and 'on*', respectively.
 
   Following shows examples of rule excerpts with rule-element 'a' and the attributes that are being permitted:
 
@@ -473,8 +473,9 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
   *  'a=-*' - none
   *  'a=-*, href, title' - none except 'href' and 'title'
   *  'a=-*, -id, href, title' - none except 'href' and 'title'
+  *  'a=-on*, -id, href, onclick, title' - all except 'id' and on* other than 'onclick'
 
-  Rules regarding *attribute values* are optionally specified inside round brackets after attribute names in solidus (/)-separated `parameter = value` pairs. E.g., 'title(maxlen=30/minlen=5)'. None or one or more of the following parameters may be specified:
+  Rules regarding *attribute values* are optionally specified inside round brackets after attribute names – which cannot be wildcard references like '*' or 'data*' – in solidus (/)-separated `parameter = value` pairs. E.g., 'title(maxlen=30/minlen=5)'. None or one or more of the following parameters may be specified:
 
   *  'oneof' - one or more choices separated by '|' that the value should match; if only one choice is provided, then the value must match that choice; matching is case-sensitive
 
@@ -506,13 +507,15 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   *Special characters*: The characters ';', ',', '/', '(', ')', '|', '~' and space have special meanings in the rules. Words in the rules that use such characters, or the characters themselves, should be `escaped` by enclosing in pairs of double-quotes ('"'). A back-tick ('`') can be used to escape a literal '"'. An example rule illustrating this is 'input=value(maxlen=30/match="/^\w/"/default="your `"ID`"")'.
 
-  *Attributes that accept multiple values*: If an attribute is 'accesskey', 'class', 'itemtype' or 'rel', which can have multiple, space-separated values, or 'srcset', which can have multiple, comma-separated values, htmLawed will parse the attribute value for such multiple values and will individually test each of them.
+  *Attributes that accept multiple values*: If an attribute is 'accesskey', 'class', 'itemtype' or 'rel', or 'archive' in case of 'object' element, which can have multiple, space-separated values, or 'archive' in case of 'object' element and 'srcset', which can have multiple, comma-separated values, htmLawed will parse the attribute value for such multiple values and will individually test each of them. The parsing is performed after any URL assessment of the attribute values (section:- #3.4.3).
    
   *Note*: To deny an attribute for all elements for which it is legal, '$config["deny_attribute"]' (see section:- #3.4) can be used instead of '$spec'. Also, attributes can be allowed element-specifically through '$spec' while being denied globally through '$config["deny_attribute"]'. The 'hook_tag' parameter (section:- #3.4.9) can also be possibly used to implement a functionality like that achieved using '$spec' functionality.
   
-  *Note*: Attributes' specifications for an element may be set through multiple rules. In case of conflict, the attribute specification in the first rule will get precedence.
+  *Note*: Attributes permitted through '$spec' are permitted regardless of any denial through '$config'. An attribute for which $spec indicates both permission and denial will be permitted. E.g., 'onclick' with '$spec' value of 'a = *, -onclick, onclick', 'a = -on*, onclick' or 'a = on*, -onclick' will be permitted inside 'a'.
+
+  *Note*: Attributes' specifications for an element may be (inadvertently) set through multiple rules. In case of conflict, the attribute specification in the first rule will get precedence.
   
-  '$spec' can also be used to permit custom, non-standard attributes as well as custom rules for standard attributes. Thus, the following value of '$spec' will permit the custom uses of the standard 'rel' attribute in 'input' (not permitted as per standards) and of a non-standard attribute, 'vFlag', in 'img'.
+  '$spec' can also be used to permit *custom or non-standard attributes*. Thus, the following value of '$spec' will permit the custom uses of the standard 'rel' attribute in 'input' (not permitted as per standards) and of a non-standard attribute, 'vFlag', in 'img'.
   
     $spec = 'img=vFlag; input=rel'
 
@@ -650,9 +653,9 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   *  By default, htmLawed won't check many attribute values for standard compliance. E.g., 'width="20m"' with the dimension in non-standard 'm' is let through. Implementing universal and strict attribute value checks can make htmLawed slow and resource-intensive. Admins should look at the 'hook_tag' parameter (section:- #3.4.9) or '$spec' to enforce finer checks on attribute values.
   
-  *  By default, htmLawed considers all ARIA, data-*, event and microdata attributes as global attributes and permits them in all elements. This is not strictly standard-compliant. E.g., the 'itemtype' microdata attribute is permitted only in elements that also have the 'itemscope' attribute. Admins can configure htmLawed to be more strict about this (section:- #2.3).
+  *  By default, htmLawed considers all ARIA, data-*, event, and microdata attributes as global attributes and permits them in all elements. This is not strictly standard-compliant. E.g., the 'itemtype' microdata attribute is permitted only in elements that also have the 'itemscope' attribute. Admins can configure htmLawed to be more strict about this (section:- #2.3).
 
-  *  The attributes, deprecated (which can be transformed too) or not, that it supports are largely those that are in the specifications. Only a few of the proprietary attributes are supported. However, '$spec' can be used to allow custom attributes (section:- #2.3).
+  *  The attributes, whether deprecated (which can be transformed by htmLawed) or not, that it supports are largely those that are in the specifications. Only a few of the proprietary attributes are supported. However, '$spec' can be used to allow custom attributes (section:- #2.3).
 
   *  Except for contained URLs and dynamic expressions (also optional), htmLawed does not check CSS style property values. Admins should look at using the 'hook_tag' parameter (section:- #3.4.9) or '$spec' for finer checks. Perhaps the best option is to disallow 'style' but allow 'class' attributes with the right 'oneof' or 'match' values for 'class', and have the various class style properties in '.css' CSS stylesheet files.
 
@@ -676,7 +679,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   *  htmLawed does not correct certain possible attribute-based security vulnerabilities (e.g., '<a href="http://x%22+style=%22background-image:xss">x</a>'). These arise when browsers mis-identify markup in `escaped` text, defeating the very purpose of escaping text (a bad browser will read the given example as '<a href="http://x" style="background-image:xss">x</a>').
   
-  *  Because of poor Unicode support in PHP, htmLawed does not remove the `high value` HTML-invalid characters with multi-byte code-points. Such characters however are extremely unlikely to be in the input. (see section:- #3.1).
+  *  Because of inadequate Unicode support in PHP, htmLawed does not remove the `high value` HTML-invalid characters with multi-byte code-points. Such characters however are extremely unlikely to be in the input. (see section:- #3.1).
   
   *  htmLawed does not check or correct the character encoding of the input it receives. In conjunction with permitting circumstances such as when the character encoding is left undefined through HTTP headers or HTML 'meta' tags, this can permit an exploit (like Google's `UTF-7/XSS` vulnerability of the past). Also, htmLawed can mangle input text if it is not well-formed in terms of character encoding. Administrators can consider using code available elsewhere to check well-formedness of input text characters to correct any defect.
   
@@ -783,7 +786,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   Valid character entities take the form '&*;' where '*' is '#x' followed by a hexadecimal number (hexadecimal numeric entity; like '&#xA0;' for non-breaking space), or alphanumeric like 'gt' (external or named entity; like '&nbsp;' for non-breaking space), or '#' followed by a number (decimal numeric entity; like '&#160;' for non-breaking space). Character entities referring to the soft-hyphen character (the '&shy;' or '\xad' character; hexadecimal code-point 'ad' [decimal '173']) in URL-accepting attribute values are always replaced with spaces; soft-hyphens in attribute values introduce vulnerabilities in some older versions of the Opera and Mozilla [Firefox] browsers.
 
-  htmLawed (function 'hl_ent()'):
+  htmLawed (function 'hl_entity()'):
 
   *  Neutralizes entities with multiple leading zeroes or missing semi-colons (potentially dangerous)
 
@@ -793,7 +796,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   *  Neutralizes entities referring to characters that are HTML-discouraged (code-points, hexadecimally, '7f' to '84', '86' to '9f', and 'fdd0' to 'fddf', or decimally, '127' to '132', '134' to '159', and '64991' to '64976'). Entities referring to the remaining discouraged characters (see section:- #5.1 for a full list) are let through.
 
-  *  Neutralizes named entities that are not in the specifications
+  *  Neutralizes named entities that are not in the HTML5 specification
 
   *  Optionally converts valid HTML-specific named entities except '&gt;', '&lt;', '&quot;', and '&amp;' to decimal numeric ones (hexadecimal if $config["hexdec_entity"] is '2') for generic XML-compliance. For this, '$config["named_entity"]' should be '1'.
 
@@ -841,11 +844,13 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   Elements 'math' and 'svg' are not supported. They and their content will get `filtered` unless a strategy like in section:- #3.9 is used.
 
-  Elements like 'acronym', 'applet', 'basefont', 'bgsound', 'big', 'blink', 'center', 'dir', 'font', 'hgroup', 'image', 'keygen', 'marquee', 'menuitem', 'nobr', 'noembed', 'rb', 'rtc', 'shadow', 'spacer', 'strike', 'tt', and 'xmp' are currently obsolete/deprecated. Some of them, like 'acronym' and 'keygen', are supported in htmLawed (see above list). `Tag transformation` is possible for improving compliance with HTML standards -- most, but not all, of the obsolete/deprecated elements are converted to valid  ones; see section:- #3.3.2.
+  Elements like 'acronym', 'applet', 'basefont', 'bgsound', 'big', 'blink', 'center', 'command', 'dir', 'font', 'hgroup', 'image', 'keygen', 'marquee', 'menuitem', 'nobr', 'noembed', 'rb', 'rtc', 'shadow', 'spacer', 'strike', 'tt', and 'xmp' are currently obsolete/deprecated. Some of them, like 'acronym' and 'keygen', are supported in htmLawed (see above list). `Tag transformation` is possible for improving compliance with HTML standards -- most, but not all, of the obsolete/deprecated elements are converted to valid  ones; see section:- #3.3.2.
 
-  These 16 elements are `empty` elements that have an opening tag with possible content but no element content (thus, no closing tag): 'area', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'isindex', 'keygen', 'link', 'meta', 'param', 'source', 'track', and 'wbr'.
+  These 16 htmLawed-supported elements are `empty` elements that have an opening tag with possible content but no element content (thus, no closing tag): 'area', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'isindex', 'keygen', 'link', 'meta', 'param', 'source', 'track', and 'wbr'.
 
-  With '$config["safe"] = 1', the default set will exclude 'applet', 'audio', 'canvas', 'dialog', 'embed', 'iframe', 'object', 'script' and 'video'; see section:- #3.6.
+  As per standards, closing tags are optional for these elements under certain conditions: 'caption', 'colgroup', 'dd', 'dt', 'li', 'optgroup', 'option', 'p', 'rp', 'rt', 'tbody', 'td', 'tfoot', 'th', 'thead', and 'tr'. By default, htmLawed will add a missing closing tag for such elements, unless balancing (section:- #3.3.3) is turned off.
+
+  With '$config["safe"] = 1', the default set of htmLawed-supported elements will exclude 'applet', 'audio', 'canvas', 'dialog', 'embed', 'iframe', 'object', 'script' and 'video'; see section:- #3.6.
 
   When '$config["elements"]', which specifies allowed elements, is `properly` defined, and neither empty nor set to '0' or '*', the default set is not used. To have elements added to or removed from the default set, a '+/-' notation is used. E.g., '*-script-object' implies that only 'script' and 'object' are disallowed, whereas '*+noembed' means that 'noembed' is also allowed. For an element with a hyphen in name, use round brackets around the name; e.g., '(my-custom-element)'. Elements can also be specified as comma separated names. E.g., 'a, b, i' means only 'a', 'b' and 'i' are permitted. In this notation, '*', '+' and '-' have no significance and can actually cause a mis-reading.
 
@@ -869,7 +874,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   Basically, when using the '+/-' notation, commas (',') should not be used, and vice versa, and '*' should be used with the former but not the latter.
 
-  *Note*: Even if an element that is not in the default set is allowed through '$config["elements"]', like 'noembed' in the last example, it will eventually be removed during tag balancing unless such balancing is turned off ('$config["balance"]' set to '0'). Currently, the only way around this, which actually is simple, is to edit htmLawed's PHP code which define various arrays in the function 'hl_bal()' to accommodate the element and its nesting properties.
+  *Note*: Even if an element that is not in the default set is allowed through '$config["elements"]', like 'noembed' in the last example, it will eventually be removed during tag balancing unless such balancing is turned off ('$config["balance"]' set to '0'). Currently, the only way around this, which actually is simple, is to edit htmLawed's PHP code which define various arrays in the function 'hl_balance()' to accommodate the element and its nesting properties.
 
   A possible second way to specify allowed elements is to set '$config["parent"]' to an element name that supposedly will hold the input, and to set '$config["balance"]' to '1'. During tag balancing (see section:- #3.3.3), all elements that cannot legally nest inside the parent element will be removed. The parent element is auto-reset to 'div' if '$config["parent"]' is empty, 'body', or an element not in htmLawed's default set of 122 elements.
 
@@ -879,7 +884,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   'CDATA' sections have the format '<![CDATA[...anything but not "]]>"...]]>', and HTML comments, '<!--...anything but not "-->"... -->'. Neither HTML comments nor 'CDATA' sections can reside inside tags. HTML comments can exist anywhere else, but 'CDATA' sections can exist only where plain text is allowed (e.g., immediately inside 'td' element content but not immediately inside 'tr' element content).
 
-  htmLawed (function 'hl_cmtcd()') handles HTML comments or 'CDATA' sections depending on the values of '$config["comment"]' or '$config["cdata"]'. If '0', such markup is not looked for and the text is processed like plain text. If '1', it is removed completely. If '2', it is preserved but any '<', '>' and '&' inside are changed to entities. If '3' for '$config["cdata"]', or '3' or '4' for '$config["comment"]', they are left as such. When '$config["comment"]' is set to '4', htmLawed will not force a space character before the '-->' comment-closing marker. While such a space is required for standard-compliance, it can corrupt marker code put in HTML by some software (such as Microsoft Outlook).  
+  htmLawed (function 'hl_commentCdata()') handles HTML comments or 'CDATA' sections depending on the values of '$config["comment"]' or '$config["cdata"]'. If '0', such markup is not looked for and the text is processed like plain text. If '1', it is removed completely. If '2', it is preserved but any '<', '>' and '&' inside are changed to entities. If '3' for '$config["cdata"]', or '3' or '4' for '$config["comment"]', they are left as such. When '$config["comment"]' is set to '4', htmLawed will not force a space character before the '-->' comment-closing marker. While such a space is required for standard-compliance, it can corrupt marker code put in HTML by some software (such as Microsoft Outlook).  
 
   Note that for the last two cases, HTML comments and 'CDATA' sections will always be removed from tag content (function 'hl_tag()').
 
@@ -908,7 +913,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 .. 3.3.2  Tag-transformation for better compliance with standards ..o
 
 
-  If '$config["make_tag_strict"]' is set and not '0', following deprecated elements (and attributes), even if admin-permitted, are mutated as indicated (element content remains intact; function 'hl_tag2()'):
+  If '$config["make_tag_strict"]' is set and not '0', following deprecated elements (and attributes), even if admin-permitted, are mutated as indicated (element content remains intact; function 'hl_deprecatedElement()'):
 
   *  acronym - 'abbr'
   *  applet - based on '$config["make_tag_strict"]', unchanged ('1') or removed ('2')
@@ -939,7 +944,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 .. 3.3.3  Tag balancing & proper nesting ...........................o
 
 
-  If '$config["balance"]' is set to '1', htmLawed (function 'hl_bal()') checks and corrects the input to have properly balanced tags and legal element content (i.e., any element nesting should be valid, and plain text may be present only in the content of elements that allow them).
+  If '$config["balance"]' is set to '1', htmLawed (function 'hl_balance()') checks and corrects the input to have properly balanced tags and legal element content (i.e., any element nesting should be valid, and plain text may be present only in the content of elements that allow them).
 
   Depending on the value of '$config["keep_bad"]' (see section:- #2.2 and section:- #3.3), illegal content may be removed or neutralized to plain text by converting < and > to entities:
 
@@ -989,7 +994,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   *Note:* In the example above, unlike '<*>', '<xml>' gets considered as a tag (even though there is no HTML element named 'xml'). Thus, the 'keep_bad' parameter's value affects '<xml>' but not '<*>'. In general, text matching the regular expression pattern '<(/?)([a-zA-Z][a-zA-Z1-6]*)([^>]*?)\s?>' is considered a tag (phrase enclosed by the angled brackets '<' and '>', and starting [with an optional slash preceding] with an alphanumeric word that starts with an alphabet...), and is subjected to the 'keep_bad' value.
 
-  Nesting/content rules for each of the 122 standard elements in htmLawed's default set (see section:- #3.3) are defined in function 'hl_bal()'. Any custom element (section:- #3.3.6) is permitted to be within and to contain any other element.
+  Nesting/content rules for each of the 122 standard elements in htmLawed's default set (see section:- #3.3) are defined in function 'hl_balance()'. Any custom element (section:- #3.3.6) is permitted to be within and to contain any other element.
 
   Plain text and/or certain elements nested inside 'blockquote', 'form', 'map' and 'noscript' need to be in block-level elements. This point is often missed during manual writing of HTML code. htmLawed attempts to address this during balancing. E.g., if the parent container is set as 'form', the input 'B:<input type="text" value="b" />C:<input type="text" value="c" />' is converted to '<div>B:<input type="text" value="b" />C:<input type="text" value="c" /></div>'.
 
@@ -1033,7 +1038,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 .. 3.3.6  Custom HTML elements .....................................o
 
 
-  Custom elements are HTML elements whose properties/behaviors are defined by the `author`, instead of being `universal` (i.e., defined by the HTML interpreter like a browser). Their names must begin with a lowercased a-z character and contain at least one hyphen (-). A name cannot be: annotation-xml, color-profile, font-face, font-face-src, font-face-uri, font-face-format, font-face-name, or missing-glyph. A huge variety of characters is permitted in the name.
+  Custom elements are HTML elements whose properties/behaviors are defined by the `author`, instead of being `universal` (i.e., defined by the HTML interpreter like a browser). Their names must begin with a lowercased a-z character, contain at least one hyphen (-), and cannot be: `annotation-xml, color-profile, font-face, font-face-src, font-face-uri, font-face-format, font-face-name, missing-glyph`. A huge variety of characters is permitted in the name.
 
     0-9 | . | _ | #xB7 | #xC0-#xD6 | #xD8-#xF6 | #xF8-#x37D | #x37F-#x1FFF | #x200C-#x200D | #x203F-#x2040 | #x2070-#x218F | #x2C00-#x2FEF | #x3001-#xD7FF | #xF900-#xFDCF | #xFDF0-#xFFFD | [#x10000-#xEFFFF]
 
@@ -1041,27 +1046,25 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   Any custom HTML element is treated like an inline element, like 'strong', during tidying (section:- #3.3.5). During tag balancing (section:- #3.3.3), any custom element is permitted to be within and to contain any other element. These laxities are necessitated because, by definition, custom elements are parochial.
 
-  Custom elements are permitted to have attributes of any name (consisting of any character except a few such as equal, forward slash, and most control characters), unless overruled through '$spec'.
+  Custom elements are permitted to have attributes of any name consisting of any character except a few such as equal, forward slash, and most control characters (unless denied through '$spec') and satisfying any 'data' attribute name requirement.
 
 
 -- 3.4  Attributes -------------------------------------------------o
 
 
-  In its default setting, htmLawed will only permit attributes described in the HTML specifications (including deprecated ones). A list of the attributes and the elements they are allowed in is in section:- #5.2. Using the '$spec' argument, htmLawed can be forced to permit custom, non-standard attributes as well as custom rules for standard attributes (section:- #2.3).
+    In its default setting, htmLawed will only permit attributes described in the HTML specifications (including deprecated ones). A list of the attributes and the elements they are allowed in is in section:- #5.2. Using the '$spec' argument, htmLawed can be forced to permit custom, non-standard attributes as well as custom rules for standard attributes (section:- #2.3).
   
   Custom `data-*` (`data-star`) attributes, where the first three characters of the value of `star` (*) after lower-casing do not equal 'xml', and the value of `star` does not have a colon (:), equal-to (=), newline, solidus (/), space or tab character, or any upper-case A-Z character are allowed in all elements. ARIA, event and microdata attributes like 'aria-live', 'onclick' and 'itemid' are also considered global attributes (section:- #5.2).
 
-  When '$config["deny_attribute"]' is not set, or set to '0', or empty ('""'), all attributes are permitted. Otherwise, '$config["deny_attribute"]' can be set as a list of comma-separated names of the denied attributes. 'on*' can be used to refer to the group of potentially dangerous, script-accepting event attributes like 'onblur' and 'onchange' that have 'on' at the beginning of their names. Similarly, 'aria*' and 'data*' can be used to respectively refer to the set of all ARIA and data-* attributes.
+  When '$config["deny_attribute"]' is not set, or set to '0', or empty ('""'), all attributes are permitted as per standards. Otherwise, '$config["deny_attribute"]' can be set in two different ways. One way is as a list of comma-separated names of the denied attributes. 'on*' can be used to refer to the group of potentially dangerous, script-accepting event attributes like 'onchange' that have 'on' at the beginning of their names. Similarly, 'aria*' and 'data*' can be used to respectively refer to the set of all ARIA and data-* attributes. The second way to set '$config["deny_attribute"]' permits the denying of all but a few attributes globally. The notation is '* -attribute1 -attribute2 ...'. Thus, a value of '* -title -href' implies that except 'href' and 'title' (where allowed as per standards) all other attributes are to be removed. Terms 'aria*' 'data*', and 'on*' can be used in this notation, and a whitespace character is necessary before the '-' character.
   
-  With '$config["safe"] = 1' (section:- #3.6), the 'on*' event attributes are automatically disallowed even if a value for '$config["deny_attribute"]' has been manually provided.
+  With '$config["safe"] = 1' (section:- #3.6), any 'on*' event attribute is disallowed even if '$config["deny_attribute"]' is set otherwise (such as '* -style -on*').
 
-  Note that attributes specified in '$config["deny_attribute"]' are denied globally, for all elements. To deny attributes for only specific elements, '$spec' (see section:- #2.3) can be used. '$spec' can also be used to element-specifically permit an attribute otherwise denied through '$config["deny_attribute"]'.
-  
+  The attribute restrictions specified with '$config["deny_attribute"]' apply to all elements. To deny attributes for only specific elements, '$spec' (see section:- #2.3) can be used. '$spec' can also be used to element-specifically permit an attribute otherwise denied through '$config["deny_attribute"]'.
+
   Finer restrictions on attributes can also be put into effect through '$config["hook_tag"]' (section:- #3.4.9).
 
-  *Note*: To deny all but a few attributes globally, a simpler way to specify '$config["deny_attribute"]' would be to use the notation '* -attribute1 -attribute2 ...'. Thus, a value of '* -title -href' implies that except 'href' and 'title' (where allowed as per standards) all other attributes are to be removed. With this notation, the value for the parameter 'safe' (section:- #3.6) will have no effect on 'deny_attribute'. Values of 'aria*' 'data*', and 'on*' cannot be used in this notation to refer to the sets of all ARIA, data-*, and on* attributes respectively.
-
-  Custom elements are permitted to have attributes of any name (consisting of any character except a few such as equal, forward slash, and most control characters), unless overruled through '$spec'.
+  Custom elements are permitted to have attributes of any name consisting of any character except a few such as equal, forward slash, and most control characters (unless denied through '$spec') and satisfying any 'data' attribute name requirement.
 
   htmLawed (function 'hl_tag()') also:
 
@@ -1069,6 +1072,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
   *  Removes duplicate attributes (last one stays)
   *  Gives attributes the form 'name="value"' and single-spaces them, removing unnecessary white-spacing
   *  Provides `required` attributes (see section:- #3.4.1)
+  *  Optionally lowercases certain standard attribute values (see section:- #3.4.5)
   *  Double-quotes values and escapes any '"' inside them
   *  Replaces the possibly dangerous soft-hyphen characters (hexadecimal code-point 'ad') in the values with spaces
   *  Allows custom function to additionally filter/modify attribute values (see section:- #3.4.9)
@@ -1117,9 +1121,11 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   Also, only 'data', 'file', 'http', 'https' and 'javascript' are permitted in these attributes that accept URLs:
 
-    action, cite, classid, codebase, data, itemtype, longdesc, model, pluginspage, pluginurl, src, srcset, style, usemap, and event attributes like onclick
+    action, archive, cite, classid, codebase, data, itemtype, longdesc, model, pluginspage, pluginurl, poster, src, srcset, style, usemap, and event attributes like onclick
 
   With '$config["safe"] = 1' (section:- #3.6), the above is changed to disallow 'app', 'data' and 'javascript'.
+
+  *Note*: URLs in `data-*` attribute values are not checked, but $spec (section:- #2.3) or '$config["hook_tag"]' (section:- #3.4.9) can be used for this purpose.
   
   These default sets are used when '$config["schemes"]' is not set (see section:- #2.2). To over-ride the defaults, '$config["schemes"]' is defined as a string of semi-colon-separated sub-strings of type 'attribute: comma-separated schemes'. E.g., 'href: mailto, http, https; onclick: javascript; src: http, https'. For unspecified attributes, 'data', 'file', 'http', 'https' and 'javascript' are permitted. This can be changed by passing schemes for '*' in '$config["schemes"]'. E.g., 'href: mailto, http, https; *: https, https'.
 
@@ -1130,8 +1136,6 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
   As a side-note, one may find 'style: *' useful as URLs in 'style' attributes can be specified in a variety of ways, and the patterns that htmLawed uses to identify URLs may mistakenly identify non-URL text.
   
   '!' can be put in the list of schemes to disallow all protocols as well as `local` URLs. Thus, with 'href: http, style: !', '<a href="http://cnn.com" style="background-image: url(local.jpg);">CNN</a>' will become '<a href="http://cnn.com" style="background-image: url(denied:local.jpg);">CNN</a>'
-
-  *Note*: If URL-accepting attributes other than those listed above are being allowed, then the scheme will not be checked unless the attribute name contains the string 'src' (e.g., 'dynsrc') or starts with 'o' (e.g., 'onbeforecopy').
 
   With '$config["safe"] = 1', all URLs are disallowed in the 'style' attribute values.
 
@@ -1307,7 +1311,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   The 'hook_tag' parameter is different from the 'hook' parameter (section:- #3.7).
 
-  Snippets of hook function code developed by others may be available on the htmLawed:- http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed website.
+  Snippets of hook function code developed by others may be available on the htmLawed:- https://bioinformatics.org/phplabware/internal_utilities/htmLawed website.
 
 
 -- 3.5  Simple configuration directive for most valid XHTML --------o
@@ -1339,7 +1343,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
   
   If a value for a parameter auto-set through 'safe' is still manually provided, then that value can over-ride the auto-set value. E.g., with '$config["safe"] = 1' and '$config["elements"] = "* +script"', 'script', but not 'applet', is allowed. Such over-ride does not occur for 'deny_attribute' (for legacy reason) when comma-separated attribute names are provided as the value for this parameter (section:- #3.4); instead htmLawed will add 'on*' to the value provided for 'deny_attribute'.
 
-  A page illustrating the efficacy of htmLawed's anti-XSS abilities with 'safe' set to '1' against XSS vectors listed by RSnake:- http://ha.ckers.org/xss.html may be available here:- http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/rsnake/RSnakeXSSTest.htm.
+  A page illustrating the efficacy of htmLawed's anti-XSS abilities with 'safe' set to '1' against XSS vectors listed by RSnake:- http://ha.ckers.org/xss.html may be available here:- https://bioinformatics.org/phplabware/internal_utilities/htmLawed/rsnake/RSnakeXSSTest.htm.
 
 
 -- 3.7  Using a hook function --------------------------------------o
@@ -1351,7 +1355,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   Note that the 'hook' parameter is different from the 'hook_tag' parameter (section:- #3.4.9).
 
-  Snippets of hook function code developed by others may be available on the htmLawed:- http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed website.
+  Snippets of hook function code developed by others may be available on the htmLawed:- https://bioinformatics.org/phplabware/internal_utilities/htmLawed website.
 
 
 -- 3.8  Obtaining `finalized` parameter values ---------------------o
@@ -1386,7 +1390,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 -- 4.1  Support -----------------------------------------------------
 
 
-  Software updates and forum-based community-support may be found at http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed. For general PHP issues (not htmLawed-specific), support may be found through internet searches and at http://php.net.
+  Software updates and forum-based community-support may be found at https://bioinformatics.org/phplabware/internal_utilities/htmLawed.
 
 
 -- 4.2  Known issues -----------------------------------------------o
@@ -1402,9 +1406,11 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   `Version number - Release date. Notes`
 
-  1.2.8 - 6 June 2022. Fixes incorrect formatting of HTML comments when '$config["comment"]' = 4; fixes misreading of entity-fied colon characters in 'style' attribute values; '$config["show_setting"]' now includes htmLawed version; improved PHP 8.2 code compatibility, and readability.
+  1.2.9 - 2 July 2022. Improves parsing of '$config["deny_attribute"]' to permit spaces flanking comma characters and allow references to sets of all ARIA, data-* and event attributes; fixes parsing of '$spec' for data-* attribute rules; now permits use of 'aria*', 'data*', and 'on*' in '$spec'; now covers all named HTML entities of current standard specification (this increased htmLawed code size by ~40%); recognizes that closing tag may be omitted for 'caption', 'optgroup', 'rp', 'rt', and 'tbody' as well; recognizes that 'archive' and 'poster' attribute values can have URLs, which can be multiple; recognizes 'onloadend' as global attribute; renames some internal functions; improved standards-compliance for element nesting.
 
-  1.2.7 - 10 April 2022. Support for elements 'dialog', 'picture', 'slot', and 'template'; support for custom HTML elements; support for global attributes 'autocapitalize', 'autofocus', 'enterkeyhint', 'inputmode', 'is', and 'nonce'; support for 17 additional ARIA and 11 additional on* event handler attributes; support for attributes with names not beginning with a-z; fix for a minor bug arising during deprecated height/weight attribute transformation 
+  1.2.8 - 6 June 2022. Fixes incorrect formatting of HTML comments when '$config["comment"]' = 4; fixes misreading of entity-fied colon characters in 'style' attribute values; '$config["show_setting"]' now includes htmLawed version; improved PHP 8.2 code compatibility, and readability
+
+  1.2.7 - 10 April 2022. Support for elements 'dialog', 'picture', 'slot', and 'template'; support for custom HTML elements; support for global attributes 'autocapitalize', 'autofocus', 'enterkeyhint', 'inputmode', 'is', and 'nonce'; support for 17 additional ARIA and 11 additional on* event handler attributes; support for attributes with names not beginning with a-z; fix for a minor bug arising during deprecated height/weight attribute transformation
 
   1.2.6 - 4 September 2021. Fixes a bug that arises when '$config["deny_attribute"]' has a 'data-*' attribute with > 1 hyphen character 
 
@@ -1494,7 +1500,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   1.0.2 - 13 February 2008. Improved implementation of '$config["keep_bad"]'
 
-  1.0.1 - 7 November 2007. Improved regex for identifying URLs, protocols and dynamic expressions ('hl_tag()' and 'hl_prot()'); no error display with 'hl_regex()'
+  1.0.1 - 7 November 2007. Improved regex for identifying URLs, protocols and dynamic expressions; no error display during regex testing
 
   1.0 - 2 November 2007. First release
 
@@ -1518,13 +1524,13 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
   
   (3) From version older than 1.2 to later, if htmLawed is used without '$config["safe"]' set to 1: Unlike previous versions, htmLawed version 1.2 and later permit 'data' and 'javascript' URL schemes by default (see section:- #3.4.3).
 
-  Old versions of htmLawed may be available online. E.g., for version 1.0, check http://www.bioinformatics.org/phplabware/downloads/htmLawed1.zip; for 1.1.1, http://www.bioinformatics.org/phplabware/downloads/htmLawed111.zip; and for 1.1.22, http://www.bioinformatics.org/phplabware/downloads/htmLawed1122.zip.
+  Old versions of htmLawed may be available online. E.g., for version 1.0, check https://bioinformatics.org/phplabware/downloads/htmLawed1.zip; for 1.1.1, https://bioinformatics.org/phplabware/downloads/htmLawed111.zip; and for 1.1.22, https://bioinformatics.org/phplabware/downloads/htmLawed1122.zip.
 
 
 -- 4.6  Comparison with 'HTMLPurifier' -----------------------------o
 
 
-  The HTMLPurifier PHP library by Edward Yang is a very good HTML filtering script that uses object oriented PHP code. Compared to htmLawed, it (as of year 2015):
+  The HTMLPurifier:- http://htmlpurifier.org PHP library by Edward Yang is a good HTML filtering script that uses object-oriented PHP code. Compared to htmLawed, as of year 2015, HTMLPurifier:
 
   *  does not support PHP versions older than 5.0 (HTMLPurifier dropped PHP 4 support after version 2)
 
@@ -1532,25 +1538,27 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   *  consumes 10-15 times more RAM memory (just including the HTMLPurifier files without calling the filter requires a few MBs of memory)
 
-  *  is expectedly slower
+  *  is expectedly considerably slower
 
   *  lacks many of the extra features of htmLawed (like entity conversions and code compaction/beautification)
 
   *  has poor documentation
 
-  However, HTMLPurifier has finer checks for character encodings and attribute values, and can log warnings and errors. Visit the HTMLPurifier website:- http://htmlpurifier.org for updated information.
+  *  may have finer checks for character encodings and attribute values
+
+  *  can log warnings and errors
 
 
 -- 4.7  Use through application plug-ins/modules -------------------o
 
 
-  Plug-ins/modules to implement htmLawed in applications such as Drupal may have been developed. Check the application websites and the htmLawed forum:- http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed.
+  Plug-ins/modules to implement htmLawed in applications such as Drupal may have been developed. Check the application websites and the htmLawed forum:- https://bioinformatics.org/phplabware/internal_utilities/htmLawed.
 
 
 -- 4.8  Use in non-PHP applications --------------------------------o
 
 
-  Non-PHP applications written in Python, Ruby, etc., may be able to use htmLawed through system calls to the PHP engine. Such code may have been documented on the internet. Also check the forum on the htmLawed site:- http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed.
+  Non-PHP applications written in Python, Ruby, etc., may be able to use htmLawed through system calls to the PHP engine. Such code may have been documented on the internet. Also check the forum on the htmLawed site:- https://bioinformatics.org/phplabware/internal_utilities/htmLawed.
 
 
 -- 4.9  Donate -----------------------------------------------------o
@@ -1732,7 +1740,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   The following attributes, including event-specific ones and attributes of ARIA and microdata specifications, are considered global and allowed in all elements:
 
-  accesskey, autocapitalize, autofocus, aria-activedescendant, aria-atomic, aria-autocomplete, aria-braillelabel, aria-brailleroledescription, aria-busy, aria-checked, aria-colcount, aria-colindex, aria-colindextext, aria-colspan, aria-controls, aria-current, aria-describedby, aria-description, aria-details, aria-disabled, aria-dropeffect, aria-errormessage, aria-expanded, aria-flowto, aria-grabbed, aria-haspopup, aria-hidden, aria-invalid, aria-keyshortcuts, aria-label, aria-labelledby, aria-level, aria-live, aria-multiline, aria-multiselectable, aria-orientation, aria-owns, aria-placeholder, aria-posinset, aria-pressed, aria-readonly, aria-relevant, aria-required, aria-roledescription, aria-rowcount, aria-rowindex, aria-rowindextext, aria-rowspan, aria-selected, aria-setsize, aria-sort, aria-valuemax, aria-valuemin, aria-valuenow, aria-valuetext, class, contenteditable, contextmenu, dir, draggable, dropzone, enterkeyhint, hidden, id, inert, inputmode, is, itemid, itemprop, itemref, itemscope, itemtype, lang, nonce, onabort, onblur, oncanplay, oncanplaythrough, onchange, onclick, oncontextmenu, oncopy, oncuechange, oncut, ondblclick, ondrag, ondragend, ondragenter, ondragleave, ondragover, ondragstart, ondrop, ondurationchange, onemptied, onended, onerror, onfocus, onformchange, onforminput, oninput, oninvalid, onkeydown, onkeypress, onkeyup, onload, onloadeddata, onloadedmetadata, onloadstart, onlostpointercapture, onmousedown, onmousemove, onmouseout, onmouseover, onmouseup, onmousewheel, onpaste, onpause, onplay, onplaying, onpointercancel, ongotpointercapture, onpointerdown, onpointerenter, onpointerleave, onpointermove, onpointerout, onpointerover, onpointerup, onprogress, onratechange, onreadystatechange, onreset, onsearch, onscroll, onseeked, onseeking, onselect, onshow, onstalled, onsubmit, onsuspend, ontimeupdate, ontoggle, ontouchcancel, ontouchend, ontouchmove, ontouchstart, onvolumechange, onwaiting, onwheel, onauxclick, oncancel, onclose, oncontextlost, oncontextrestored, onformdata, onmouseenter, onmouseleave, onresize, onsecuritypolicyviolation, onslotchange, role, slot, spellcheck, style, tabindex, title, translate, xmlns, xml:base, xml:lang, xml:space
+  accesskey, autocapitalize, autofocus, aria-activedescendant, aria-atomic, aria-autocomplete, aria-braillelabel, aria-brailleroledescription, aria-busy, aria-checked, aria-colcount, aria-colindex, aria-colindextext, aria-colspan, aria-controls, aria-current, aria-describedby, aria-description, aria-details, aria-disabled, aria-dropeffect, aria-errormessage, aria-expanded, aria-flowto, aria-grabbed, aria-haspopup, aria-hidden, aria-invalid, aria-keyshortcuts, aria-label, aria-labelledby, aria-level, aria-live, aria-multiline, aria-multiselectable, aria-orientation, aria-owns, aria-placeholder, aria-posinset, aria-pressed, aria-readonly, aria-relevant, aria-required, aria-roledescription, aria-rowcount, aria-rowindex, aria-rowindextext, aria-rowspan, aria-selected, aria-setsize, aria-sort, aria-valuemax, aria-valuemin, aria-valuenow, aria-valuetext, class, contenteditable, contextmenu, dir, draggable, dropzone, enterkeyhint, hidden, id, inert, inputmode, is, itemid, itemprop, itemref, itemscope, itemtype, lang, nonce, onabort, onblur, oncanplay, oncanplaythrough, onchange, onclick, oncontextmenu, oncopy, oncuechange, oncut, ondblclick, ondrag, ondragend, ondragenter, ondragleave, ondragover, ondragstart, ondrop, ondurationchange, onemptied, onended, onerror, onfocus, onformchange, onforminput, oninput, oninvalid, onkeydown, onkeypress, onkeyup, onload, onloadeddata, onloadedmetadata, onloadend, onloadstart, onlostpointercapture, onmousedown, onmousemove, onmouseout, onmouseover, onmouseup, onmousewheel, onpaste, onpause, onplay, onplaying, onpointercancel, ongotpointercapture, onpointerdown, onpointerenter, onpointerleave, onpointermove, onpointerout, onpointerover, onpointerup, onprogress, onratechange, onreadystatechange, onreset, onsearch, onscroll, onseeked, onseeking, onselect, onshow, onstalled, onsubmit, onsuspend, ontimeupdate, ontoggle, ontouchcancel, ontouchend, ontouchmove, ontouchstart, onvolumechange, onwaiting, onwheel, onauxclick, oncancel, onclose, oncontextlost, oncontextrestored, onformdata, onmouseenter, onmouseleave, onresize, onsecuritypolicyviolation, onslotchange, role, slot, spellcheck, style, tabindex, title, translate, xmlns, xml:base, xml:lang, xml:space
 
   Custom `data-*` attributes, where the first three characters of the value of `star` (*) after lower-casing do not equal 'xml' and the value of `star` does not have a colon (:), equal-to (=), newline, solidus (/), space, tab, or any A-Z character, are also considered global and allowed in all elements.
   
@@ -1824,22 +1832,22 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   Except for the main 'htmLawed()' function, htmLawed's functions are *name-spaced* using the 'hl_' prefix. The *functions* and their roles are:
 
-  *  'hl_attrval' - check attribute values against '$spec'
-  *  'hl_bal' - balance tags and ensure proper nesting
-  *  'hl_cmtcd' - handle CDATA sections and HTML comments
-  *  'hl_ent' - handle character entities
-  *  'hl_prot' - check a URL scheme/protocol
+  *  'hl_attributeValue' - check attribute values against '$spec' rules
+  *  'hl_balance' - balance tags and ensure proper nesting
+  *  'hl_commentCdata' - handle CDATA sections and HTML comments
+  *  'hl_deprecatedElement' - transform element tags
+  *  'hl_entity' - handle character entities
   *  'hl_regex' - check syntax of a regular expression
-  *  'hl_spec' - convert user-supplied '$spec' value to one used internally
+  *  'hl_spec' - convert '$spec' value to one used internally
   *  'hl_tag' - handle element tags and attributes
-  *  'hl_tag2' - transform element tags
   *  'hl_tidy' - compact/beautify HTML 
+  *  'hl_url' - check URL-containing values
   *  'hl_version' - report htmLawed version
   *  'htmLawed' - main function
 
-  'htmLawed()' finalizes '$spec' (with the help of 'hl_spec()') and '$config', and globalizes them. Finalization of '$config' involves setting default values if an inappropriate or invalid one is supplied. This includes calling 'hl_regex()' to check well-formedness of regular expression patterns if such expressions are user-supplied through '$config'. 'htmLawed()' then removes invalid characters like nulls and 'x01' and appropriately handles entities using 'hl_ent()'. HTML comments and CDATA sections are identified and treated as per '$config' with the help of 'hl_cmtcd()'. When retained, the '<' and '>' characters identifying them, and the '<', '>' and '&' characters inside them, are replaced with control characters (code-points '1' to '5') till any tag balancing is completed.
+  'htmLawed()' finalizes '$spec' (with the help of 'hl_spec()') and '$config', and globalizes them. Finalization of '$config' involves setting default values if an inappropriate or invalid one is supplied. This includes calling 'hl_regex()' to check well-formedness of regular expression patterns if such expressions are user-supplied through '$config'. 'htmLawed()' then removes invalid characters like nulls and 'x01' and appropriately handles entities using 'hl_entity()'. HTML comments and CDATA sections are identified and treated as per '$config' with the help of 'hl_commentCdata()'. When retained, the '<' and '>' characters identifying them, and the '<', '>' and '&' characters inside them, are replaced with control characters (code-points '1' to '5') till any tag balancing is completed.
 
-  After this `initial processing` 'htmLawed()' identifies tags using regex and processes them with the help of 'hl_tag()' --  a large function that analyzes tag content, filtering it as per HTML standards, '$config' and '$spec'. Among other things, 'hl_tag()' transforms deprecated elements using 'hl_tag2()', removes attributes from closing tags, checks attribute values as per '$spec' rules using 'hl_attrval()', and checks URL protocols using 'hl_prot()'. 'htmLawed()' performs tag balancing and nesting checks with a call to 'hl_bal()', and optionally compacts/beautifies the output with proper white-spacing with a call to 'hl_tidy()'. The latter temporarily replaces white-space, and '<', '>' and '&' characters inside 'pre', 'script' and 'textarea' elements, and HTML comments and CDATA sections with control characters (code-points '1' to '5', and '7').
+  After this `initial processing` 'htmLawed()' identifies tags using regex and processes them with the help of 'hl_tag()' --  a large function that analyzes tag content, filtering it as per HTML standards, '$config' and '$spec'. Among other things, 'hl_tag()' transforms deprecated elements using 'hl_deprecatedElement()', removes attributes from closing tags, checks attribute values as per '$spec' rules using 'hl_attributeValue()', and checks URL protocols using 'hl_url()'. 'htmLawed()' performs tag balancing and nesting checks with a call to 'hl_balance()', and optionally compacts/beautifies the output with proper white-spacing with a call to 'hl_tidy()'. The latter temporarily replaces white-space, and '<', '>' and '&' characters inside 'pre', 'script' and 'textarea' elements, and HTML comments and CDATA sections with control characters (code-points '1' to '5', and '7').
 
   htmLawed permits the use of custom code or *hook functions* at two stages. The first, called inside 'htmLawed()', allows the input text as well as the finalized '$config' and '$spec' values to be altered right after the initial processing (see section:- #3.7). The second is called by 'hl_tag()' once the tag content is finalized (see section:- #3.4.9).
 

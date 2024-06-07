@@ -18,7 +18,7 @@
  * @license   Dual licensed with LGPL 3 and GPL 2+
  * @package   htmLawed\test
  * @link      https://bioinformatics.org/phplabware/internal_utilities/htmLawed
- * @version   6 June 2022
+ * @version   13 July 2022
  */
 
 // Configuration
@@ -409,7 +409,7 @@ function hexdump($d)
     if(f.style){f.style.display = 'none';}
     else{f.visibility = 'hidden';}
     f.innerHTML = '<p style="display:none;"><input style="display:none;" type="hidden" name="prefill" id="prefill" value="1" /><input style="display:none;" type="hidden" name="prefill_doctype" id="prefill_doctype" value="'+ type+ '" /><input style="display:none;" type="hidden" name="group" id="group" value="1" /><input type="hidden" name="ss" id="ss" value="1" /></p>';
-    f.action = 'http://validator.w3.org/check';
+    f.action = 'https://validator.w3.org/check';
     f.target = 'validate'+id+type;
     var t = document.createElement('textarea');
     t.name = 'fragment';
@@ -583,14 +583,14 @@ if ($do) {
 if ($_w3c_validate && $validation) {
 ?>
 
-<button type="button" title="HTML 4.01 W3C online validation" style="float: right;" onclick="javascript: sndValidn('text', 'html401'); return false;" onkeypress="javascript: sndValidn('text', 'html401'); return false;">Check HTML</button>
-<button type="button" title="XHTML 1.1 W3C online validation" style="float: right;" onclick="javascript: sndValidn('text', 'xhtml110'); return false;" onkeypress="javascript: sndValidn('text', 'xhtml110'); return false;">Check XHTML</button>
+<button type="button" title="HTML 4.01 W3C online validation" style="float: right;" onclick="javascript: sndValidn('text', 'html401'); return false;" onkeypress="javascript: sndValidn('text', 'html401'); return false;">Validate HTML4</button>
+<button type="button" title="XHTML 1.1 W3C online validation" style="float: right;" onclick="javascript: sndValidn('text', 'xhtml10'); return false;" onkeypress="javascript: sndValidn('text', 'xhtml10'); return false;">Validate XHTML4</button>
 
 <?php
     }
 } else {
     if ($_w3c_validate) {
-        echo '<span style="float: right;" class="help" title="for direct submission of input or output code to W3C validator for (X)HTML validation"><span style="font-size: 85%;">&nbsp;Validator tools: </span><input type="checkbox" value="1" name="w3c_validate" id="w3c_validate" style="vertical-align: middle;"', ($validation ? ' checked="checked"' : ''), ' /></span>';
+        echo '<span style="float: right;" class="help" title="for direct submission of input or output code to W3C validator for (X)HTML 4 validation"><span style="font-size: 85%;">&nbsp;Validator tools: </span><input type="checkbox" value="1" name="w3c_validate" id="w3c_validate" style="vertical-align: middle;"', ($validation ? ' checked="checked"' : ''), ' /></span>';
     }
 }
 ?>
@@ -636,8 +636,8 @@ $cfg = array(
     'direct_list_nest' => array('2', 'nil', 'allow direct nesting of a list within another without requiring it to be a list item', 'nil'),
     'elements' => array('', '', 'allowed elements', '50'),
     'hexdec_entity' => array('3', '1', 'convert hexadecimal numeric entities to decimal ones, or vice versa', '0'),
-    'hook' => array('', '', 'name of hook function', '25'),
-    'hook_tag' => array('', '', 'name of custom function to further check attribute values', '25'),
+    'hook' => array('', '', '[disabled] name of hook function', '25', 'd' => 1),
+    'hook_tag' => array('', '', '[disabled] name of custom function to further check attribute values', '25', 'd' => 1),
     'keep_bad' => array('7', '6', 'keep, or remove <em>bad</em> tag content', '0'),
     'lc_std_val' => array('2', '1', 'lower-case std. attribute values like <em>radio</em>', '0'),
     'make_tag_strict' => array('3', 'nil', 'transform deprecated elements', 'nil'),
@@ -717,7 +717,13 @@ if ($do) {
         $cfg['unique_ids'] = isset($cfg['unique_ids2'][0]) ? $cfg['unique_ids2'] : 1;
     }
     unset($cfg['unique_ids2']);
-    unset($cfg['and_mark']); // disabling and_mark
+    unset($cfg['and_mark']); // disabling and_mark, and security risks hook, hook_tag
+    if (isset($cfg['hook'])) {
+      unset($cfg['hook']);
+    }
+    if (isset($cfg['hook_tag'])) {
+      unset($cfg['hook_tag']);
+    }
 
     $cfg['show_setting'] = 'hlcfg';
     $st = microtime();
@@ -731,8 +737,8 @@ if ($do) {
     if ($_w3c_validate && $validation) {
 ?>
 
-<button type="button" title="HTML 4.01 W3C online validation" style="float: right;" onclick="javascript: sndValidn('text2', 'html401'); return false;" onkeypress="javascript: sndValidn('text2', 'html401'); return false;">Check HTML</button>
-<button type="button" title="XHTML 1.1 W3C online validation" style="float: right;" onclick="javascript: sndValidn('text2', 'xhtml110'); return false;" onkeypress="javascript: sndValidn('text2', 'xhtml110'); return false;">Check XHTML</button>
+<button type="button" title="HTML 4.01 W3C online validation" style="float: right;" onclick="javascript: sndValidn('text2', 'html401'); return false;" onkeypress="javascript: sndValidn('text2', 'html401'); return false;">Validate HTML4</button>
+<button type="button" title="XHTML 1.1 W3C online validation" style="float: right;" onclick="javascript: sndValidn('text2', 'xhtml110'); return false;" onkeypress="javascript: sndValidn('text2', 'xhtml110'); return false;">Validate XHTML4</button>
 
 <?php
     }
