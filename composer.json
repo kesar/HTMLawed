@@ -27,7 +27,7 @@
         {
          "type": "composer",
          "url": "https://sourceforge.net/projects/htmlawed/files"
-        },
+        }
     ],
     "support": {
         "docs": "https://bioinformatics.org/phplabware/internal_utilities/htmLawed",
