@@ -1,5 +1,5 @@
 /*
-htmLawed_TESTCASE.txt, 10 April 2022
+htmLawed_TESTCASE.txt, 23 January 2023
 To test htmLawed
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
@@ -401,6 +401,7 @@ na Alemanha.
 
 <img alt="<img onmouseover=confirm(1)//"<"">
 '';!--"<xss>=&{()}<br />
+<img src="javascript&colon;alert('xss');" /><br />
 <img src="javascript%3Aalert('xss');" /><br />
 <img src="javascript:alert('xss');" /><br />
 <img src="java script:alert('xss');" /><br />

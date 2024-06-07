@@ -1,6 +1,6 @@
 /*
-htmLawed_README.txt, 5 November 2022
-htmLawed 1.2.10
+htmLawed_README.txt, 23 January 2023
+htmLawed 1.2.11
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_utilities/htmLawed
@@ -1404,6 +1404,8 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   `Version number - Release date. Notes`
 
+  1.2.11 - 23 January 2023. Fixes an XSS vulnerability arising from a lack of inspection for the alphabetical HTML entity for colon character in URLs
+
   1.2.10 - 5 November 2022. Class methods can now be specified as '$config' 'hook' and 'hook_tag' functions; corrects a PHP notice if '$config["schemes"]' mistakenly lacks colons.
 
   1.2.9 - 2 July 2022. Improves parsing of '$config["deny_attribute"]' to permit spaces flanking comma characters and allow references to sets of all ARIA, data-* and event attributes; fixes parsing of '$spec' for data-* attribute rules; now permits use of 'aria*', 'data*', and 'on*' in '$spec'; now covers all named HTML entities of current standard specification (this increased htmLawed code size by ~40%); recognizes that closing tag may be omitted for 'caption', 'optgroup', 'rp', 'rt', and 'tbody' as well; recognizes that 'archive' and 'poster' attribute values can have URLs, which can be multiple; recognizes 'onloadend' as global attribute; renames some internal functions; improved standards-compliance for element nesting.
@@ -1570,7 +1572,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 -- 4.10  Acknowledgements ------------------------------------------o
 
 
-  Nicholas Alipaz, Bryan Blakey, Pádraic Brady, Michael Butler, Dac Chartrand, Alexandre Chouinard, Ulf Harnhammer, Gareth Heyes, Hakre, Klaus Leithoff, Hideki Mitsuda, Lukasz Pilorz, Shelley Powers, Psych0tr1a, Lincoln Russell, Tomas Sykorka, Harro Verton, walrusmoose, Edward Yang, and many others.
+  Nicholas Alipaz, Bryan Blakey, Pádraic Brady, Michael Butler, Dac Chartrand, Alexandre Chouinard, NinCollin, Ulf Harnhammer, Gareth Heyes, Hakre, Klaus Leithoff, Hideki Mitsuda, Lukasz Pilorz, Shelley Powers, Psych0tr1a, Lincoln Russell, Tomas Sykorka, Harro Verton, walrusmoose, Edward Yang, and many others.
 
   Thank you!
 

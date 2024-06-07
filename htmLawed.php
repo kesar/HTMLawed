@@ -17,8 +17,8 @@
  * @link       https://bioinformatics.org/phplabware/internal_utilities/htmLawed
  * @package    htmLawed
  * @php        >=4.4
- * @time       2022-11-05
- * @version    1.2.10
+ * @time       2023-01-23
+ * @version    1.2.11
  */
 
 /*
@@ -1544,7 +1544,7 @@ function hl_url($url, $attr=null)
     ) {
     return "{$preUrl}{$url}{$postUrl}";
   }
-  if (preg_match('`^([^:?[@!$()*,=/\'\]]+?)(:|&#(58|x3a);|%3a|\\\\0{0,4}3a).`i', $url, $m)
+  if (preg_match('`^([^:?[@!$()*,=/\'\]]+?)(:|&(#(58|x3a)|colon);|%3a|\\\\0{0,4}3a).`i', $url, $m)
       && !isset($okSchemeAr[strtolower($m[1])]) // Special crafting suggests malice
     ) {
     return "{$preUrl}{$blocker}{$url}{$postUrl}";
@@ -1579,5 +1579,5 @@ function hl_url($url, $attr=null)
  */
 function hl_version()
 {
-  return '1.2.10';
+  return '1.2.11';
 }
