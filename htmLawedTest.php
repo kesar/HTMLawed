@@ -18,7 +18,7 @@
  * @license   Dual licensed with LGPL 3 and GPL 2+
  * @package   htmLawed\test
  * @link      https://bioinformatics.org/phplabware/internal_utilities/htmLawed
- * @version   13 July 2022
+ * @version   4 August 2023
  */
 
 // Configuration
@@ -644,8 +644,8 @@ $cfg = array(
     'named_entity' => array('2', '1', 'allow named entities, or convert numeric ones', '0'),
     'no_deprecated_attr' => array('3', '1', 'allow deprecated attributes, or transform them', '0'),
     'parent' => array('', 'div', 'name of parent element', '25'),
-    'safe' => array('2', '0', 'for most <em>safe</em> HTML', '0'),
-    'schemes' => array('', 'href: aim, app, feed, file, ftp, gopher, http, https, irc, javascript, mailto, news, nntp, sftp, ssh, telnet, tel; *:data, file, http, https, javascript', 'allowed URL protocols', '50'),
+    'safe' => array('2', '0', 'for most <em>safe</em> HTML; if 1, you may want to remove <em>javascript</em> from <m>schemes</em> below', '0'),
+    'schemes' => array('', 'href: aim, app, feed, file, ftp, gopher, http, https, irc, javascript, mailto, news, nntp, sftp, ssh, telnet, tel, ws, wss; *:data, file, http, https, javascript, ws, wss', 'allowed URL protocols', '50'),
     'show_setting' => array('', 'htmLawed_setting', 'variable name to record <em>finalized</em> htmLawed settings', '25', 'd' => 1),
     'style_pass' => array('2', 'nil', 'do not look at <em>style</em> attribute values', 'nil'),
     'tidy' => array('3', '0', 'beautify/compact', '-1', '8', '1t1', 'format'),
