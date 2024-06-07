@@ -17,8 +17,8 @@
  * @link       https://bioinformatics.org/phplabware/internal_utilities/htmLawed
  * @package    htmLawed
  * @php        >=4.4
- * @time       2022-07-02
- * @version    1.2.9
+ * @time       2022-11-05
+ * @version    1.2.10
  */
 
 /*
@@ -113,9 +113,8 @@ function htmLawed($t, $C=1, $S=array())
        . 'file, http, https';
   $C['schemes'] = array();
   foreach (explode(';', trim(str_replace(array(' ', "\t", "\r", "\n"), '', $x), ';')) as $v) {
-    $x = $y = null;
-    list($x, $y) = explode(':', $v, 2);
-    if ($y) {
+    if(strpos($v, ':')) {
+      list($x, $y) = explode(':', $v, 2);
       $C['schemes'][$x] = array_flip(explode(',', $y));
     }
   }
@@ -155,8 +154,8 @@ function htmLawed($t, $C=1, $S=array())
   $C['css_expression'] = empty($C['css_expression']) ? 0 : 1;
   $C['direct_list_nest'] = empty($C['direct_list_nest']) ? 0 : 1;
   $C['hexdec_entity'] = isset($C['hexdec_entity']) ? $C['hexdec_entity'] : 1;
-  $C['hook'] = (!empty($C['hook']) && function_exists($C['hook'])) ? $C['hook'] : 0;
-  $C['hook_tag'] = (!empty($C['hook_tag']) && function_exists($C['hook_tag'])) ? $C['hook_tag'] : 0;
+  $C['hook'] = (!empty($C['hook']) && is_callable($C['hook'])) ? $C['hook'] : 0;
+  $C['hook_tag'] = (!empty($C['hook_tag']) && is_callable($C['hook_tag'])) ? $C['hook_tag'] : 0;
   $C['keep_bad'] = isset($C['keep_bad']) ? $C['keep_bad'] : 6;
   $C['lc_std_val'] = isset($C['lc_std_val']) ? (bool)$C['lc_std_val'] : 1;
   $C['make_tag_strict'] = isset($C['make_tag_strict']) ? $C['make_tag_strict'] : 1;
@@ -209,7 +208,7 @@ function htmLawed($t, $C=1, $S=array())
   }
 
   if ($C['hook']) {
-    $t = $C['hook']($t, $C, $S);
+    $t = call_user_func($C['hook'], $t, $C, $S);
   }
 
   // Handle remaining text.
@@ -1014,7 +1013,7 @@ function hl_tag($t)
       !isset($emptyEleAr[$ele])
       ? (empty($C['hook_tag'])
          ? "</$ele>"
-         : $C['hook_tag']($ele))
+         : call_user_func($C['hook_tag'], $ele, 0))
       : ($C['keep_bad'] % 2
          ? str_replace(array('<', '>'), array('&lt;', '&gt;'), $t)
          : ''));
@@ -1399,7 +1398,7 @@ function hl_tag($t)
     }
     return "<{$ele}{$attrStr}". (isset($emptyEleAr[$ele]) ? ' /' : ''). '>';
   } else {
-    return $C['hook_tag']($ele, $filtAttrAr);
+    return call_user_func($C['hook_tag'], $ele, $filtAttrAr);
   }
 }
 
@@ -1580,5 +1579,5 @@ function hl_url($url, $attr=null)
  */
 function hl_version()
 {
-  return '1.2.9';
+  return '1.2.10';
 }
