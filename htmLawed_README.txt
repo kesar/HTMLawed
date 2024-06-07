@@ -1,6 +1,6 @@
 /*
-htmLawed_README.txt, 1 May 2023
-htmLawed 1.2.13
+htmLawed_README.txt, 25 May 2023
+htmLawed 1.2.14
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_utilities/htmLawed
@@ -1408,6 +1408,8 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   `Version number - Release date. Notes`
 
+  1.2.14 - 25 May 2023. Fixed issue that prevented use of attribute 'srcset' in 'link' and 'source'
+
   1.2.13 - 1 May 2023. Fixed issues with nesting for 'details' and 'ruby', handling of self-closing tags, handling of multiple values in 'sizes', and '$config["schemes"]' parsing
 
   1.2.12 - 25 April 2023. Fixed issue that prevented use of attribute 'sizes' in 'img' and 'source'
@@ -1580,7 +1582,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 -- 4.10  Acknowledgements ------------------------------------------o
 
 
-  Nicholas Alipaz, Bryan Blakey, Pádraic Brady, Michael Butler, Dac Chartrand, Alexandre Chouinard, NinCollin, Alexandra Ellwood, Ulf Harnhammer, Gareth Heyes, Hakre, Klaus Leithoff, Hideki Mitsuda, Lukasz Pilorz, Shelley Powers, Psych0tr1a, Lincoln Russell, Tomas Sykorka, Harro Verton, walrusmoose, Edward Yang, and many others.
+  Nicholas Alipaz, Bryan Blakey, Pádraic Brady, Michael Butler, Dac Chartrand, Alexandre Chouinard, NinCollin, Alexandra Ellwood, Ulf Harnhammer, Gareth Heyes, Hakre, Klaus Leithoff, Hideki Mitsuda, jtojnar, Lukasz Pilorz, Shelley Powers, Psych0tr1a, Lincoln Russell, Tomas Sykorka, Harro Verton, walrusmoose, Edward Yang, and many others.
 
   Thank you!
 
@@ -1731,7 +1733,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
   src - audio, embed, iframe, img, input, script, source, track, video
   srcdoc~ - iframe
   srclang~ - track
-  srcset~% - img
+  srcset~% - img, link, source
   standby - object
   start - ol
   step~ - input
