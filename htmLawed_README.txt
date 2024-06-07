@@ -1,6 +1,6 @@
 /*
-htmLawed_README.txt, 25 April 2023
-htmLawed 1.2.12
+htmLawed_README.txt, 1 May 2023
+htmLawed 1.2.13
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_utilities/htmLawed
@@ -1052,7 +1052,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 -- 3.4  Attributes -------------------------------------------------o
 
 
-    In its default setting, htmLawed will only permit attributes described in the HTML specifications (including deprecated ones). A list of the attributes and the elements they are allowed in is in section:- #5.2. Using the '$spec' argument, htmLawed can be forced to permit custom, non-standard attributes as well as custom rules for standard attributes (section:- #2.3).
+  In its default setting, htmLawed will only permit attributes described in the HTML specifications (including deprecated ones). A list of the attributes and the elements they are allowed in is in section:- #5.2. Using the '$spec' argument, htmLawed can be forced to permit custom, non-standard attributes as well as custom rules for standard attributes (section:- #2.3).
   
   Custom `data-*` (`data-star`) attributes, where the first three characters of the value of `star` (*) after lower-casing do not equal 'xml', and the value of `star` does not have a colon (:), equal-to (=), newline, solidus (/), space or tab character, or any upper-case A-Z character are allowed in all elements. ARIA, event and microdata attributes like 'aria-live', 'onclick' and 'itemid' are also considered global attributes (section:- #5.2).
 
@@ -1408,6 +1408,8 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 
   `Version number - Release date. Notes`
 
+  1.2.13 - 1 May 2023. Fixed issues with nesting for 'details' and 'ruby', handling of self-closing tags, handling of multiple values in 'sizes', and '$config["schemes"]' parsing
+
   1.2.12 - 25 April 2023. Fixed issue that prevented use of attribute 'sizes' in 'img' and 'source'
 
   1.2.11 - 23 January 2023. Fixes an XSS vulnerability arising from a lack of inspection for the alphabetical HTML entity for colon character in URLs
@@ -1578,7 +1580,7 @@ A PHP Labware internal utility - https://bioinformatics.org/phplabware/internal_
 -- 4.10  Acknowledgements ------------------------------------------o
 
 
-  Nicholas Alipaz, Bryan Blakey, Pádraic Brady, Michael Butler, Dac Chartrand, Alexandre Chouinard, NinCollin, Ulf Harnhammer, Gareth Heyes, Hakre, Klaus Leithoff, Hideki Mitsuda, Lukasz Pilorz, Shelley Powers, Psych0tr1a, Lincoln Russell, Tomas Sykorka, Harro Verton, walrusmoose, Edward Yang, and many others.
+  Nicholas Alipaz, Bryan Blakey, Pádraic Brady, Michael Butler, Dac Chartrand, Alexandre Chouinard, NinCollin, Alexandra Ellwood, Ulf Harnhammer, Gareth Heyes, Hakre, Klaus Leithoff, Hideki Mitsuda, Lukasz Pilorz, Shelley Powers, Psych0tr1a, Lincoln Russell, Tomas Sykorka, Harro Verton, walrusmoose, Edward Yang, and many others.
 
   Thank you!
 

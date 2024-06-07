@@ -17,8 +17,8 @@
  * @link       https://bioinformatics.org/phplabware/internal_utilities/htmLawed
  * @package    htmLawed
  * @php        >=4.4
- * @time       2023-04-25
- * @version    1.2.12
+ * @time       2023-05-01
+ * @version    1.2.13
  */
 
 /*
@@ -106,11 +106,11 @@ function htmLawed($t, $C=1, $S=array())
 
   $x = (isset($C['schemes'][2]) && strpos($C['schemes'], ':')
         ? strtolower($C['schemes'])
-        : 'href: aim, feed, file, ftp, gopher, http, https, irc, mailto, news, nntp, sftp, ssh, tel, telnet')
-       . (empty($C['safe'])
-          ? ', app, javascript; *: data, javascript, '
-          : '; *:')
-       . 'file, http, https';
+        : ('href: aim, feed, file, ftp, gopher, http, https, irc, mailto, news, nntp, sftp, ssh, tel, telnet'
+           . (empty($C['safe'])
+              ? ', app, javascript; *: data, javascript, '
+              : '; *:')
+           . 'file, http, https'));
   $C['schemes'] = array();
   foreach (explode(';', trim(str_replace(array(' ', "\t", "\r", "\n"), '', $x), ';')) as $v) {
     if(strpos($v, ':')) {
@@ -251,7 +251,7 @@ function hl_attributeValue($attr, $value, $ruleAr, $ele)
   $valSep =
     (in_array($attr, $spacedValsAttrAr) || ($attr == 'archive' && $ele == 'object'))
     ? ' '
-    : (($attr == 'srcset' || ($attr == 'archive' && $ele == 'applet'))
+    : (($attr == 'sizes' || $attr == 'srcset' || ($attr == 'archive' && $ele == 'applet'))
        ? ','
        : '');
   $out = array();
@@ -330,19 +330,19 @@ function hl_balance($t, $act=1, $parentEle='div')
 
   $blockKidEleAr = array('blockquote'=>1, 'form'=>1, 'map'=>1, 'noscript'=>1);
   $flowKidEleAr = array('a'=>1, 'article'=>1, 'aside'=>1, 'audio'=>1, 'button'=>1, 'canvas'=>1, 'del'=>1, 'details'=>1, 'dialog'=>1, 'div'=>1, 'dd'=>1, 'fieldset'=>1, 'figure'=>1, 'footer'=>1, 'header'=>1, 'iframe'=>1, 'ins'=>1, 'li'=>1, 'main'=>1, 'menu'=>1, 'nav'=>1, 'noscript'=>1, 'object'=>1, 'section'=>1, 'slot'=>1, 'style'=>1, 'td'=>1, 'template'=>1, 'th'=>1, 'video'=>1); // Later context-wise dynamic move of ins & del to $inlineKidEleAr
-  $inlineKidEleAr = array('abbr'=>1, 'acronym'=>1, 'address'=>1, 'b'=>1, 'bdi'=>1, 'bdo'=>1, 'big'=>1, 'caption'=>1, 'cite'=>1, 'code'=>1, 'data'=>1, 'datalist'=>1, 'dfn'=>1, 'dt'=>1, 'em'=>1, 'figcaption'=>1, 'font'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'hgroup'=>1, 'i'=>1, 'kbd'=>1, 'label'=>1, 'legend'=>1, 'mark'=>1, 'meter'=>1, 'output'=>1, 'p'=>1, 'picture'=>1, 'pre'=>1, 'progress'=>1, 'q'=>1, 'rb'=>1, 'rt'=>1, 's'=>1, 'samp'=>1, 'small'=>1, 'span'=>1, 'strike'=>1, 'strong'=>1, 'sub'=>1, 'summary'=>1, 'sup'=>1, 'time'=>1, 'tt'=>1, 'u'=>1, 'var'=>1);
+  $inlineKidEleAr = array('abbr'=>1, 'acronym'=>1, 'address'=>1, 'b'=>1, 'bdi'=>1, 'bdo'=>1, 'big'=>1, 'caption'=>1, 'cite'=>1, 'code'=>1, 'data'=>1, 'datalist'=>1, 'dfn'=>1, 'dt'=>1, 'em'=>1, 'figcaption'=>1, 'font'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'hgroup'=>1, 'i'=>1, 'kbd'=>1, 'label'=>1, 'legend'=>1, 'mark'=>1, 'meter'=>1, 'output'=>1, 'p'=>1, 'picture'=>1, 'pre'=>1, 'progress'=>1, 'q'=>1, 'rb'=>1, 'rt'=>1, 'ruby'=>1, 's'=>1, 'samp'=>1, 'small'=>1, 'span'=>1, 'strike'=>1, 'strong'=>1, 'sub'=>1, 'summary'=>1, 'sup'=>1, 'time'=>1, 'tt'=>1, 'u'=>1, 'var'=>1);
   $noKidEleAr = array('area'=>1, 'br'=>1, 'col'=>1, 'command'=>1, 'embed'=>1, 'hr'=>1, 'img'=>1, 'input'=>1, 'isindex'=>1, 'keygen'=>1, 'link'=>1, 'meta'=>1, 'param'=>1, 'source'=>1, 'track'=>1, 'wbr'=>1);
 
   // Special parent-child relations.
 
-  $invalidMomKidAr = array('a'=>array('a'=>1, 'address'=>1, 'button'=>1, 'details'=>1, 'embed'=>1, 'iframe'=>1, 'keygen'=>1, 'label'=>1, 'select'=>1, 'textarea'=>1), 'address'=>array('address'=>1, 'article'=>1, 'aside'=>1, 'footer'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'header'=>1, 'hgroup'=>1, 'keygen'=>1, 'nav'=>1, 'section'=>1), 'audio'=>array('audio'=>1, 'video'=>1), 'button'=>array('a'=>1, 'address'=>1, 'button'=>1, 'details'=>1, 'embed'=>1, 'iframe'=>1, 'keygen'=>1, 'label'=>1, 'select'=>1, 'textarea'=>1), 'dfn'=>array('dfn'=>1), 'fieldset'=>array('fieldset'=>1), 'footer'=>array('footer'=>1, 'header'=>1), 'form'=>array('form'=>1), 'header'=>array('footer'=>1, 'header'=>1), 'label'=>array('label'=>1), 'main'=>array('main'=>1), 'meter'=>array('meter'=>1), 'noscript'=>array('script'=>1), 'progress'=>array('progress'=>1), 'rb'=>array('ruby'=>1), 'rt'=>array('ruby'=>1), 'time'=>array('time'=>1), 'video'=>array('audio'=>1, 'video'=>1));
+  $invalidMomKidAr = array('a'=>array('a'=>1, 'address'=>1, 'button'=>1, 'details'=>1, 'embed'=>1, 'iframe'=>1, 'keygen'=>1, 'label'=>1, 'select'=>1, 'textarea'=>1), 'address'=>array('address'=>1, 'article'=>1, 'aside'=>1, 'footer'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'header'=>1, 'hgroup'=>1, 'keygen'=>1, 'nav'=>1, 'section'=>1), 'audio'=>array('audio'=>1, 'video'=>1), 'button'=>array('a'=>1, 'address'=>1, 'button'=>1, 'details'=>1, 'embed'=>1, 'iframe'=>1, 'keygen'=>1, 'label'=>1, 'select'=>1, 'textarea'=>1), 'dfn'=>array('dfn'=>1), 'fieldset'=>array('fieldset'=>1), 'footer'=>array('footer'=>1, 'header'=>1), 'form'=>array('form'=>1), 'header'=>array('footer'=>1, 'header'=>1), 'label'=>array('label'=>1), 'main'=>array('main'=>1), 'meter'=>array('meter'=>1), 'noscript'=>array('script'=>1), 'progress'=>array('progress'=>1), 'rb'=>array('ruby'=>1), 'rt'=>array('ruby'=>1), 'ruby'=>array('ruby'=>1), 'time'=>array('time'=>1), 'video'=>array('audio'=>1, 'video'=>1));
   $invalidKidEleAr = array('a'=>1, 'address'=>1, 'article'=>1, 'aside'=>1, 'audio'=>1, 'button'=>1, 'details'=>1, 'dfn'=>1, 'embed'=>1, 'fieldset'=>1, 'footer'=>1, 'form'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'header'=>1, 'hgroup'=>1, 'iframe'=>1, 'keygen'=>1, 'label'=>1, 'main'=>1, 'meter'=>1, 'nav'=>1, 'progress'=>1, 'ruby'=>1, 'script'=>1, 'section'=>1, 'select'=>1, 'textarea'=>1, 'time'=>1, 'video'=>1); // $invalidMomKidAr values
   $invalidMomEleAr = array_keys($invalidMomKidAr);
-  $validMomKidAr = array('colgroup'=>array('col'=>1, 'template'=>1), 'datalist'=>array('option'=>1, 'script'=>1), 'details'=>array('summary'=>1), 'dir'=>array('li'=>1), 'dl'=>array('dd'=>1, 'div'=>1, 'dt'=>1), 'hgroup'=>array('h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1), 'menu'=>array('li'=>1, 'script'=>1, 'template'=>1), 'ol'=>array('li'=>1, 'script'=>1, 'template'=>1), 'optgroup'=>array('option'=>1, 'script'=>1, 'template'=>1), 'option'=>array('#pcdata'=>1), 'picture'=>array('img'=>1, 'script'=>1, 'source'=>1, 'template'=>1), 'rbc'=>array('rb'=>1), 'rp'=>array('#pcdata'=>1), 'rtc'=>array('rp'=>1, 'rt'=>1), 'ruby'=>array('rb'=>1, 'rbc'=>1, 'rp'=>1, 'rt'=>1, 'rtc'=>1), 'select'=>array('optgroup'=>1, 'option'=>1), 'script'=>array('#pcdata'=>1), 'table'=>array('caption'=>1, 'col'=>1, 'colgroup'=>1, 'script'=>1, 'tbody'=>1, 'tfoot'=>1, 'thead'=>1, 'tr'=>1, 'template'=>1), 'tbody'=>array('script'=>1, 'template'=>1, 'tr'=>1), 'tfoot'=>array('tr'=>1), 'textarea'=>array('#pcdata'=>1), 'thead'=>array('script'=>1, 'template'=>1, 'tr'=>1), 'tr'=>array('script'=>1, 'td'=>1, 'template'=>1, 'th'=>1), 'ul'=>array('li'=>1, 'script'=>1, 'template'=>1)); // Immediate parent-child relation
+  $validMomKidAr = array('colgroup'=>array('col'=>1, 'template'=>1), 'datalist'=>array('option'=>1, 'script'=>1), 'dir'=>array('li'=>1), 'dl'=>array('dd'=>1, 'div'=>1, 'dt'=>1), 'hgroup'=>array('h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1), 'menu'=>array('li'=>1, 'script'=>1, 'template'=>1), 'ol'=>array('li'=>1, 'script'=>1, 'template'=>1), 'optgroup'=>array('option'=>1, 'script'=>1, 'template'=>1), 'option'=>array('#pcdata'=>1), 'picture'=>array('img'=>1, 'script'=>1, 'source'=>1, 'template'=>1), 'rbc'=>array('rb'=>1), 'rp'=>array('#pcdata'=>1), 'rtc'=>array('rp'=>1, 'rt'=>1), 'select'=>array('optgroup'=>1, 'option'=>1), 'script'=>array('#pcdata'=>1), 'table'=>array('caption'=>1, 'col'=>1, 'colgroup'=>1, 'script'=>1, 'tbody'=>1, 'tfoot'=>1, 'thead'=>1, 'tr'=>1, 'template'=>1), 'tbody'=>array('script'=>1, 'template'=>1, 'tr'=>1), 'tfoot'=>array('tr'=>1), 'textarea'=>array('#pcdata'=>1), 'thead'=>array('script'=>1, 'template'=>1, 'tr'=>1), 'tr'=>array('script'=>1, 'td'=>1, 'template'=>1, 'th'=>1), 'ul'=>array('li'=>1, 'script'=>1, 'template'=>1)); // Immediate parent-child relation
   if ($GLOBALS['C']['direct_list_nest']) {
     $validMomKidAr['ol'] = $validMomKidAr['ul'] = $validMomKidAr['menu'] += array('menu'=>1, 'ol'=>1, 'ul'=>1);
   }
-  $otherValidMomKidAr = array('address'=>array('p'=>1), 'applet'=>array('param'=>1), 'audio'=>array('source'=>1, 'track'=>1), 'blockquote'=>array('script'=>1), 'details'=>array('summary'=>1), 'fieldset'=>array('legend'=>1, '#pcdata'=>1),  'figure'=>array('figcaption'=>1),'form'=>array('script'=>1), 'map'=>array('area'=>1), 'legend'=>array('h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1), 'object'=>array('param'=>1, 'embed'=>1), 'summary'=>array('h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'hgroup'=>1), 'video'=>array('source'=>1, 'track'=>1));
+  $otherValidMomKidAr = array('address'=>array('p'=>1), 'applet'=>array('param'=>1), 'audio'=>array('source'=>1, 'track'=>1), 'blockquote'=>array('script'=>1), 'fieldset'=>array('legend'=>1, '#pcdata'=>1),  'figure'=>array('figcaption'=>1),'form'=>array('script'=>1), 'map'=>array('area'=>1), 'legend'=>array('h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1), 'object'=>array('param'=>1, 'embed'=>1), 'ruby'=>array('rb'=>1, 'rbc'=>1, 'rp'=>1, 'rt'=>1, 'rtc'=>1), 'summary'=>array('h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'hgroup'=>1), 'video'=>array('source'=>1, 'track'=>1));
 
   // Valid elements for top-level parent.
 
@@ -972,7 +972,7 @@ function hl_tag($t)
 
   // Check if element not permitted. Custom element names have certain requirements.
 
-  $ele = strtolower($m[2]);
+  $ele = rtrim(strtolower($m[2]), '/');
   static $invalidCustomEleAr = array('annotation-xml'=>1, 'color-profile'=>1, 'font-face'=>1, 'font-face-src'=>1, 'font-face-uri'=>1, 'font-face-format'=>1, 'font-face-name'=>1, 'missing-glyph'=>1);
   if (
     (!strpos($ele, '-')
@@ -1579,5 +1579,5 @@ function hl_url($url, $attr=null)
  */
 function hl_version()
 {
-  return '1.2.12';
+  return '1.2.13';
 }
